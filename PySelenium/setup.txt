@@ -1,0 +1,5 @@
+Setup instructions:
+
+- Run pip install -r requirements.txt
+- Put the web driver executables in a folder (Get the Chrome Driver from: https://sites.google.com/a/chromium.org/chromedriver/downloads
+- Add the folder to $PATH
