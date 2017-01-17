@@ -1,5 +1,5 @@
-from PySelenium.test_metadata import ElementFinder
-from PySelenium.test_metadata import Step
+from test_metadata import ElementFinder
+from test_metadata import Step
 
 
 class Click(Step, ElementFinder):

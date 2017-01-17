@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/PySelenium.iml" filepath="$PROJECT_DIR$/.idea/PySelenium.iml" />
-      <module fileurl="file://$PROJECT_DIR$/UnitTests/.idea/UnitTests.iml" filepath="$PROJECT_DIR$/UnitTests/.idea/UnitTests.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tests/.idea/UnitTests.iml" filepath="$PROJECT_DIR$/tests/.idea/UnitTests.iml" />
     </modules>
   </component>
 </project>

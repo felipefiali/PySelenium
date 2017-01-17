@@ -2,15 +2,16 @@ class Test:
     """"The base class for the tests"""
 
     def __init__(self):
-        self.currentStepCounter = 1
+        self.currentStepCounter = 0
         self.steps = []
 
     def add_step(self, step):
+        """Adds a test step to the test"""
+        self.currentStepCounter += 1
+
         step.order = self.currentStepCounter
 
         self.steps.append(step)
-
-        self.currentStepCounter += 1
 
 
 class Step:
@@ -18,7 +19,6 @@ class Step:
 
     def __init__(self):
         super().__init__()
-        self.order = 0
 
 
 class ElementFinder:
