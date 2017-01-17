@@ -1,19 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="97a69c52-3641-40cf-9b8f-ee9de07c3a69" name="Default" comment="">
-      <change type="MOVED" beforePath="$PROJECT_DIR$/PySelenium/selenium_wrapper.py" afterPath="$PROJECT_DIR$/selenium_wrapper.py" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/PySelenium/setup.txt" afterPath="$PROJECT_DIR$/setup.txt" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/PySelenium/test_metadata.py" afterPath="$PROJECT_DIR$/test_metadata.py" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/PySelenium/test_runner.py" afterPath="$PROJECT_DIR$/test_runner.py" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/PySelenium/test_steps.py" afterPath="$PROJECT_DIR$/test_steps.py" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/UnitTests/.idea/UnitTests.iml" afterPath="$PROJECT_DIR$/tests/.idea/tests.iml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/UnitTests/.idea/modules.xml" afterPath="$PROJECT_DIR$/tests/.idea/modules.xml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/UnitTests/.idea/workspace.xml" afterPath="$PROJECT_DIR$/tests/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/PySelenium.iml" afterPath="$PROJECT_DIR$/.idea/PySelenium.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-    </list>
+    <list default="true" id="97a69c52-3641-40cf-9b8f-ee9de07c3a69" name="Default" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
