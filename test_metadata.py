@@ -2,15 +2,10 @@ class Test:
     """"The base class for the tests"""
 
     def __init__(self):
-        self.currentStepCounter = 0
         self.steps = []
 
     def add_step(self, step):
         """Adds a test step to the test"""
-        self.currentStepCounter += 1
-
-        step.order = self.currentStepCounter
-
         self.steps.append(step)
 
 

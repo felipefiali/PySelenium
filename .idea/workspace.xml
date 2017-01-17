@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="97a69c52-3641-40cf-9b8f-ee9de07c3a69" name="Default" comment="" />
+    <list default="true" id="97a69c52-3641-40cf-9b8f-ee9de07c3a69" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test_metadata.py" afterPath="$PROJECT_DIR$/test_metadata.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tests/test_test_metadata.py" afterPath="$PROJECT_DIR$/tests/test_test_metadata.py" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -30,11 +34,21 @@
       <file leaf-file-name="test_test_metadata.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/tests/test_test_metadata.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="252">
-              <caret line="24" column="35" lean-forward="true" selection-start-line="24" selection-start-column="35" selection-end-line="24" selection-end-column="35" />
+            <state relative-caret-position="105">
+              <caret line="7" column="0" lean-forward="true" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
               <folding>
                 <element signature="e#0#29#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="test_metadata.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/test_metadata.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="60">
+              <caret line="4" column="0" lean-forward="false" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -162,6 +176,20 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="PySelenium" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="PySelenium" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tests" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
       <pane id="Scratches" />
@@ -177,29 +205,7 @@
       <recent name="$PROJECT_DIR$/PySelenium" />
     </key>
   </component>
-  <component name="RunManager" selected="Python tests.Unittests in PySelenium (1)">
-    <configuration default="false" name="Unittests in test_selenium_wrapper" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="PySelenium" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tests/test_selenium_wrapper.py" />
-      <option name="CLASS_NAME" value="" />
-      <option name="METHOD_NAME" value="" />
-      <option name="FOLDER_NAME" value="" />
-      <option name="TEST_TYPE" value="TEST_SCRIPT" />
-      <option name="PATTERN" value="" />
-      <option name="USE_PATTERN" value="false" />
-      <option name="PUREUNITTEST" value="true" />
-      <option name="PARAMS" value="" />
-      <option name="USE_PARAM" value="false" />
-      <method />
-    </configuration>
+  <component name="RunManager" selected="Python tests.Unittests in PySelenium (2)">
     <configuration default="false" name="Unittests in test_test_metadata" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -267,6 +273,28 @@
       <method />
     </configuration>
     <configuration default="false" name="Unittests in PySelenium (1)" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="PySelenium" />
+      <option name="SCRIPT_NAME" value="" />
+      <option name="CLASS_NAME" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="FOLDER_NAME" value="$PROJECT_DIR$" />
+      <option name="TEST_TYPE" value="TEST_FOLDER" />
+      <option name="PATTERN" value="" />
+      <option name="USE_PATTERN" value="false" />
+      <option name="PUREUNITTEST" value="true" />
+      <option name="PARAMS" value="" />
+      <option name="USE_PARAM" value="false" />
+      <method />
+    </configuration>
+    <configuration default="false" name="Unittests in PySelenium (2)" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs />
@@ -423,19 +451,19 @@
       <method />
     </configuration>
     <list size="5">
-      <item index="0" class="java.lang.String" itemvalue="Python tests.Unittests in test_selenium_wrapper" />
-      <item index="1" class="java.lang.String" itemvalue="Python tests.Unittests in test_test_metadata" />
-      <item index="2" class="java.lang.String" itemvalue="Python tests.Unittests in PySelenium" />
-      <item index="3" class="java.lang.String" itemvalue="Python tests.Unittest TestTest.test_add_step" />
-      <item index="4" class="java.lang.String" itemvalue="Python tests.Unittests in PySelenium (1)" />
+      <item index="0" class="java.lang.String" itemvalue="Python tests.Unittests in test_test_metadata" />
+      <item index="1" class="java.lang.String" itemvalue="Python tests.Unittests in PySelenium" />
+      <item index="2" class="java.lang.String" itemvalue="Python tests.Unittest TestTest.test_add_step" />
+      <item index="3" class="java.lang.String" itemvalue="Python tests.Unittests in PySelenium (1)" />
+      <item index="4" class="java.lang.String" itemvalue="Python tests.Unittests in PySelenium (2)" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python tests.Unittests in PySelenium (1)" />
-        <item index="1" class="java.lang.String" itemvalue="Python tests.Unittest TestTest.test_add_step" />
-        <item index="2" class="java.lang.String" itemvalue="Python tests.Unittests in PySelenium" />
-        <item index="3" class="java.lang.String" itemvalue="Python tests.Unittests in test_test_metadata" />
-        <item index="4" class="java.lang.String" itemvalue="Python tests.Unittests in test_selenium_wrapper" />
+        <item index="0" class="java.lang.String" itemvalue="Python tests.Unittests in PySelenium (2)" />
+        <item index="1" class="java.lang.String" itemvalue="Python tests.Unittests in PySelenium (1)" />
+        <item index="2" class="java.lang.String" itemvalue="Python tests.Unittest TestTest.test_add_step" />
+        <item index="3" class="java.lang.String" itemvalue="Python tests.Unittests in PySelenium" />
+        <item index="4" class="java.lang.String" itemvalue="Python tests.Unittests in test_test_metadata" />
       </list>
     </recent_temporary>
   </component>
@@ -465,6 +493,9 @@
     <history-entry file="Unittests_in_PySelenium_(1) - 2017.01.17 at 15h 56m 01s.xml">
       <configuration name="Unittests in PySelenium (1)" configurationId="tests" />
     </history-entry>
+    <history-entry file="Unittests_in_PySelenium_(2) - 2017.01.17 at 16h 45m 06s.xml">
+      <configuration name="Unittests in PySelenium (2)" configurationId="tests" />
+    </history-entry>
     <history-entry file="Unittests_in_test_selenium_wrapper - 2017.01.17 at 15h 30m 56s.xml">
       <configuration name="Unittests in test_selenium_wrapper" configurationId="tests" />
     </history-entry>
@@ -482,9 +513,6 @@
     </history-entry>
     <history-entry file="Unittests_in_test_test_metadata - 2017.01.17 at 15h 54m 29s.xml">
       <configuration name="Unittests in test_test_metadata" configurationId="tests" />
-    </history-entry>
-    <history-entry file="Unittests_in_tests_(1) - 2017.01.17 at 15h 21m 37s.xml">
-      <configuration name="Unittests in tests (1)" configurationId="tests" />
     </history-entry>
   </component>
   <component name="TodoView">
@@ -708,14 +736,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test_metadata.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" column="42" lean-forward="true" selection-start-line="8" selection-start-column="42" selection-end-line="8" selection-end-column="42" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/tests/testables.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="315">
@@ -724,10 +744,18 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/test_metadata.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="4" column="0" lean-forward="false" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/tests/test_test_metadata.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="252">
-          <caret line="24" column="35" lean-forward="true" selection-start-line="24" selection-start-column="35" selection-end-line="24" selection-end-column="35" />
+        <state relative-caret-position="105">
+          <caret line="7" column="0" lean-forward="true" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
           <folding>
             <element signature="e#0#29#0" expanded="true" />
           </folding>
