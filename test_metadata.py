@@ -6,6 +6,7 @@ class Test:
 
     def add_step(self, step):
         """Adds a test step to the test"""
+
         self.steps.append(step)
 
 
@@ -21,5 +22,5 @@ class ElementFinder:
 
     def __init__(self):
         super().__init__()
-        self.cssPath = ''
+        self.css_path = ''
         self.hint = ''
