@@ -16,11 +16,14 @@ class Step:
     def __init__(self):
         super().__init__()
 
+    def run(self, driver):
+        pass
+
 
 class ElementFinder:
     """A base class that specifies that a step is able to find HTML elements"""
 
-    def __init__(self):
+    def __init__(self, css_path='', hint=''):
         super().__init__()
-        self.css_path = ''
-        self.hint = ''
+        self.css_path = css_path
+        self.hint = hint

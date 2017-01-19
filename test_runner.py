@@ -1,9 +1,8 @@
 from _selenium_wrapper import Driver
-from step_runner import _run_step
 
 
 class TestResult:
-    """"Represents the result of the execution a test
+    """"Represents the result of the execution of a test
 
     Attributes:
         step_results -- Holds the results of every step on the test
@@ -28,14 +27,14 @@ class TestRunner:
         """"Runs the supplied test and returns the result of the execution"""
 
         if len(self.test.steps) == 0:
-            raise ValueError('No steps on the test')
+            raise ValueError('no steps on the test')
 
         test_result = TestResult()
 
-        driver = self._get_web_driver()
-
-        for step in self.test.steps:
-            test_result.add_step_result(_run_step(step, driver))
+        with self._get_web_driver() as driver:
+            for step in self.test.steps:
+                step_result = step.run(driver)
+                test_result.add_step_result(step_result)
 
         return test_result
 

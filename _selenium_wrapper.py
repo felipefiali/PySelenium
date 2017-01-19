@@ -14,9 +14,10 @@ class ElementNotFoundError(Exception):
         hint -- The element hint
     """
 
-    def ___init___(self, css_path, hint):
+    def ___init___(self, css_path, hint, exception):
         self.css_path = css_path
         self.hint = hint
+        self.inner_exception = exception
 
 
 class Driver:
@@ -29,6 +30,7 @@ class Driver:
         """Starts the driver once the object enters context"""
 
         self.driver = self._get_web_driver()
+
         return self
 
     def __exit__(self, type, value, traceback):
@@ -56,9 +58,14 @@ class Driver:
         if css_path is None or css_path == '':
             raise ValueError(css_path)
 
-        element = self.find_element(css_path, hint)
+        element = None
 
-        self._get_web_driver_wait(self.driver, 5).until(element.is_enabled())
+        try:
+            element = self._get_web_driver_wait(self.driver, 10).until(
+                expected_conditions.element_to_be_clickable((By.CSS_SELECTOR, css_path))
+            )
+        except Exception as exception:
+            raise ElementNotFoundError(css_path, hint, exception)
 
         element.click()
 

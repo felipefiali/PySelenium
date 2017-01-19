@@ -51,7 +51,6 @@ class TestDriver(TestCase):
                 testable_driver.click('any css path', '')
 
                 self.assertTrue(clicked_mock.called)
-                self.assertTrue(enabled_mock.called)
 
     def test_click_error_empty_css_path(self):
         testable_driver = DriverTestable()

@@ -1,5 +1,6 @@
 from _selenium_wrapper import Driver
 from selenium.webdriver.support.ui import WebDriverWait
+from test_runner import TestRunner
 
 
 class DriverStub:
@@ -61,3 +62,17 @@ class WebDriverWaitTestable(WebDriverWait):
     def stub_exception_to_be_raised_on_until(self, exception):
         self.should_raise_error_on_until = True
         self.exception_to_be_raised = exception
+
+
+class TestRunnerTestable(TestRunner):
+    """"A testable version of the TestRunner class"""
+
+    def __init__(self, test):
+        super().__init__(test)
+        self.driver_testable = DriverTestable()
+
+    def _get_web_driver(self):
+        return self.driver_testable
+
+    def inject_driver_testable(self, driver_testable):
+        self.driver_testable = driver_testable
