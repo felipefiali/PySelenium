@@ -1,8 +1,9 @@
 class Test:
     """"The base class for the tests"""
 
-    def __init__(self):
+    def __init__(self, test_id):
         self.steps = []
+        self.test_id = test_id
 
     def add_step(self, step):
         """Adds a test step to the test"""
