@@ -7,10 +7,10 @@ class DriverStub:
     """A stub of Selenium's Driver class to enable unit testing of the wrapper class"""
 
     def get(self, url):
-        print('- get method called on DriverStub with url: ' + url)
+        pass
 
     def close(self):
-        print('- close method called on DriverStub')
+        pass
 
 
 class WebElementStub:
