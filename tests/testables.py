@@ -17,7 +17,6 @@ class WebElementStub:
     """"A stub that allows unit testing of interactions with web elements"""
 
     def click(self):
-        print('web element clicked')
         pass
 
     def is_enabled(self):
