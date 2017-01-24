@@ -1,5 +1,6 @@
 from _selenium_wrapper import Driver
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions
 from test_runner import TestRunner
 
 
@@ -22,6 +23,9 @@ class WebElementStub:
     def is_enabled(self):
         return True
 
+    def get_attribute(self, attribute_name):
+        return attribute_name
+
 
 class DriverTestable(Driver):
     """A testable version of the Driver class which doesn't actually interact with Selenium"""
@@ -30,6 +34,7 @@ class DriverTestable(Driver):
         super().__init__()
         self.driver = DriverStub()
         self.web_driver_wait_testable = WebDriverWaitTestable()
+        self.presence_of_element_located = expected_conditions.presence_of_element_located(None)
 
     def _get_web_driver(self):
         return self.driver
@@ -39,6 +44,12 @@ class DriverTestable(Driver):
 
     def inject_web_driver_wait_testable(self, web_driver_wait_testable):
         self.web_driver_wait_testable = web_driver_wait_testable
+
+    def _get_presence_of_element_located(self, css_path):
+        return self.presence_of_element_located
+
+    def inject_presence_of_element_located(self, presence_condition):
+        self.presence_of_element_located = presence_condition
 
 
 class WebDriverWaitTestable(WebDriverWait):

@@ -12,11 +12,29 @@ class ElementNotFoundError(Exception):
     Attributes:
         css_path -- The supplied CSS path of the element
         hint -- The element hint
+        inner_exception -- The exception that may have been thrown by the web driver, None otherwise
     """
 
-    def ___init___(self, css_path, hint, exception):
+    def __init__(self, css_path, hint, exception):
         self.css_path = css_path
         self.hint = hint
+        self.inner_exception = exception
+
+
+class NoSuchAttributeError(Exception):
+    """Exception raised when the web element does not have a specified attribute
+
+    Attributes:
+        css_path -- The CSS path of the element
+        hint -- The element hint
+        attribute_name -- The name of the missing attribute
+        inner_exception -- The exception that may have been thrown by the web driver, None otherwise
+    """
+
+    def __init__(self, css_path, hint, attribute_name, exception):
+        self.css_path = css_path
+        self.hint = hint
+        self.attribute_name = attribute_name
         self.inner_exception = exception
 
 
@@ -56,7 +74,7 @@ class Driver:
         Raises an error if the element can't be found or clicked"""
 
         if css_path is None or css_path == '':
-            raise ValueError(css_path)
+            raise ValueError('css_path')
 
         element = None
 
@@ -69,6 +87,31 @@ class Driver:
 
         element.click()
 
+    def get_element_attribute(self, css_path, hint, attribute_name, expected_value):
+        """"Tries to get an attribute value from an element on the web page.
+        Raises errors if the element can't be found or if it doesn't have the specified attribute"""
+
+        if css_path is None or css_path == '':
+            raise ValueError('css_path')
+
+        if attribute_name is None or attribute_name == '':
+            raise ValueError('attribute_name')
+
+        if expected_value is None or expected_value == '':
+            raise ValueError('expected_value')
+
+        element = self.find_element(css_path, hint)
+
+        try:
+            attribute_value = element.get_attribute(attribute_name)
+        except Exception as exception:
+            raise NoSuchAttributeError(css_path, hint, attribute_name, exception)
+
+        if attribute_value is None or attribute_value == '':
+            raise NoSuchAttributeError(css_path, hint, attribute_name, None)
+
+        return attribute_value
+
     def find_element(self, css_path, hint):
         """Tries to find an element on the web page.
          Raises an error if the element can't be found"""
@@ -77,10 +120,10 @@ class Driver:
 
         try:
             element = self._get_web_driver_wait(self.driver, 10).until(
-                expected_conditions.presence_of_element_located((By.CSS_SELECTOR, css_path))
+                self._get_presence_of_element_located(css_path)
             )
-        except (NoSuchElementException, TimeoutException):
-            raise ElementNotFoundError(css_path, hint)
+        except (NoSuchElementException, TimeoutException) as exception:
+            raise ElementNotFoundError(css_path, hint, exception)
         else:
             return element
 
@@ -89,3 +132,6 @@ class Driver:
 
     def _get_web_driver_wait(self, driver, timeout):
         return WebDriverWait(driver, timeout)
+
+    def _get_presence_of_element_located(self, css_path):
+        return expected_conditions.presence_of_element_located((By.CSS_SELECTOR, css_path))

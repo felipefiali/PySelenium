@@ -2,9 +2,16 @@ from unittest import TestCase
 from tests.testables import DriverTestable
 from tests.testables import WebDriverWaitTestable
 from tests.testables import WebElementStub
+from tests.test_data import ANY_CSS_PATH
+from tests.test_data import ANY_HINT
+from tests.test_data import ANY_VALUE
+from tests.test_data import ANY_OTHER_VALUE
+from tests.test_data import ANY_ATTRIBUTE_NAME
 from _selenium_wrapper import ElementNotFoundError
+from _selenium_wrapper import NoSuchAttributeError
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.support.expected_conditions import presence_of_element_located
 from mock import patch
 
 
@@ -77,3 +84,166 @@ class TestDriver(TestCase):
         testable_driver.inject_web_driver_wait_testable(web_driver_wait_testable)
 
         self.assertRaises(ElementNotFoundError, testable_driver.click, 'any css path', '')
+
+    def test_find_element(self):
+        web_driver_wait_testable = WebDriverWaitTestable()
+
+        with patch.object(web_driver_wait_testable, 'until') as web_driver_wait_mock:
+            testable_driver = DriverTestable()
+            testable_driver.inject_web_driver_wait_testable(web_driver_wait_testable)
+
+            presence = presence_of_element_located(None)
+
+            testable_driver.inject_presence_of_element_located(presence)
+
+            testable_driver.find_element(ANY_CSS_PATH, ANY_HINT)
+
+            web_driver_wait_mock.assert_called_with(presence)
+
+    def test_find_element_no_such_element(self):
+        web_driver_wait_testable = WebDriverWaitTestable()
+
+        with patch.object(web_driver_wait_testable, 'until') as web_driver_wait_mock:
+            exception = NoSuchElementException()
+
+            web_driver_wait_mock.side_effect = exception
+
+            testable_driver = DriverTestable()
+            testable_driver.inject_web_driver_wait_testable(web_driver_wait_testable)
+
+            try:
+                testable_driver.find_element(ANY_CSS_PATH, ANY_HINT)
+            except ElementNotFoundError as ex:
+                self.assertEqual(ex.inner_exception, exception)
+                self.assertEqual(ex.css_path, ANY_CSS_PATH)
+                self.assertEqual(ex.hint, ANY_HINT)
+
+    def test_find_element_timeout(self):
+        web_driver_wait_testable = WebDriverWaitTestable()
+
+        with patch.object(web_driver_wait_testable, 'until') as web_driver_wait_mock:
+            exception = TimeoutException()
+
+            web_driver_wait_mock.side_effect = exception
+
+            testable_driver = DriverTestable()
+            testable_driver.inject_web_driver_wait_testable(web_driver_wait_testable)
+
+            try:
+                testable_driver.find_element(ANY_CSS_PATH, ANY_HINT)
+            except ElementNotFoundError as ex:
+                self.assertEqual(ex.inner_exception, exception)
+                self.assertEqual(ex.css_path, ANY_CSS_PATH)
+                self.assertEqual(ex.hint, ANY_HINT)
+
+    def test_get_attribute_value(self):
+        testable_driver = DriverTestable()
+        element_stub = WebElementStub()
+
+        with patch.object(testable_driver, 'find_element', return_value=element_stub) as find_element_mock:
+            with patch.object(element_stub, 'get_attribute', return_value=ANY_VALUE) as element_mock:
+                returned_value = testable_driver.get_element_attribute(ANY_CSS_PATH, ANY_HINT, ANY_ATTRIBUTE_NAME,
+                                                                       ANY_OTHER_VALUE)
+
+                self.assertEqual(returned_value, ANY_VALUE)
+
+                find_element_mock.assert_called_with(ANY_CSS_PATH, ANY_HINT)
+                element_mock.assert_called_with(ANY_ATTRIBUTE_NAME)
+
+    def test_get_attribute_empty_args(self):
+        testable_driver = DriverTestable()
+
+        self.assertRaises(ValueError, testable_driver.get_element_attribute, None, ANY_HINT, ANY_ATTRIBUTE_NAME,
+                          ANY_VALUE)
+        self.assertRaises(ValueError, testable_driver.get_element_attribute, '', ANY_HINT, ANY_ATTRIBUTE_NAME,
+                          ANY_VALUE)
+
+        self.assertRaises(ValueError, testable_driver.get_element_attribute, ANY_CSS_PATH, ANY_HINT, None, ANY_VALUE)
+        self.assertRaises(ValueError, testable_driver.get_element_attribute, ANY_CSS_PATH, ANY_HINT, '', ANY_VALUE)
+
+        self.assertRaises(ValueError, testable_driver.get_element_attribute, ANY_CSS_PATH, ANY_HINT, ANY_ATTRIBUTE_NAME,
+                          None)
+        self.assertRaises(ValueError, testable_driver.get_element_attribute, ANY_CSS_PATH, ANY_HINT, ANY_ATTRIBUTE_NAME,
+                          '')
+
+    def test_get_attribute_selenium_throws(self):
+        testable_driver = DriverTestable()
+        element_stub = WebElementStub()
+
+        with patch.object(testable_driver, 'find_element', return_value=element_stub):
+            with patch.object(element_stub, 'get_attribute') as element_mock:
+                inner_exception = Exception()
+                element_mock.side_effect = inner_exception
+
+                try:
+                    testable_driver.get_element_attribute(ANY_CSS_PATH, ANY_HINT, ANY_ATTRIBUTE_NAME,
+                                                          ANY_OTHER_VALUE)
+                except NoSuchAttributeError as exception:
+                    self.assertEqual(exception.css_path, ANY_CSS_PATH)
+                    self.assertEqual(exception.hint, ANY_HINT)
+                    self.assertEqual(exception.attribute_name, ANY_ATTRIBUTE_NAME)
+                    self.assertEqual(exception.inner_exception, inner_exception)
+
+    def test_get_attribute_selenium_returns_none(self):
+        testable_driver = DriverTestable()
+        element_stub = WebElementStub()
+
+        with patch.object(testable_driver, 'find_element', return_value=element_stub):
+            with patch.object(element_stub, 'get_attribute', return_value=None) as element_mock:
+
+                try:
+                    testable_driver.get_element_attribute(ANY_CSS_PATH, ANY_HINT, ANY_ATTRIBUTE_NAME,
+                                                          ANY_OTHER_VALUE)
+                except NoSuchAttributeError as exception:
+                    self.assertEqual(exception.css_path, ANY_CSS_PATH)
+                    self.assertEqual(exception.hint, ANY_HINT)
+                    self.assertEqual(exception.attribute_name, ANY_ATTRIBUTE_NAME)
+                    self.assertEqual(exception.inner_exception, None)
+
+    def test_get_attribute_selenium_returns_empty(self):
+        testable_driver = DriverTestable()
+        element_stub = WebElementStub()
+
+        with patch.object(testable_driver, 'find_element', return_value=element_stub):
+            with patch.object(element_stub, 'get_attribute', return_value='') as element_mock:
+
+                try:
+                    testable_driver.get_element_attribute(ANY_CSS_PATH, ANY_HINT, ANY_ATTRIBUTE_NAME,
+                                                          ANY_OTHER_VALUE)
+                except NoSuchAttributeError as exception:
+                    self.assertEqual(exception.css_path, ANY_CSS_PATH)
+                    self.assertEqual(exception.hint, ANY_HINT)
+                    self.assertEqual(exception.attribute_name, ANY_ATTRIBUTE_NAME)
+                    self.assertEqual(exception.inner_exception, None)
+
+
+class TestElementNotFoundError(TestCase):
+    """Has unit tests for the ElementNotFoundError class"""
+
+    def test_initializer(self):
+        any_css_path = 'any css path'
+        any_hint = 'any hint'
+        any_exception = Exception('foo')
+
+        exception = ElementNotFoundError(any_css_path, any_hint, any_exception)
+
+        self.assertEqual(exception.css_path, any_css_path)
+        self.assertEqual(exception.hint, any_hint)
+        self.assertEqual(exception.inner_exception, any_exception)
+
+
+class TestNoSuchAttributeError(TestCase):
+    """"Has unit tests for the NoSuchAttributeError class"""
+
+    def test_initializer(self):
+        any_css_path = 'any css path'
+        any_hint = 'any hint'
+        any_attribute_name = 'any attribute name'
+        any_exception = Exception('foo')
+
+        exception = NoSuchAttributeError(any_css_path, any_hint, any_attribute_name, any_exception)
+
+        self.assertEqual(exception.css_path, any_css_path)
+        self.assertEqual(exception.hint, any_hint)
+        self.assertEqual(exception.inner_exception, any_exception)
+        self.assertEqual(exception.attribute_name, any_attribute_name)
