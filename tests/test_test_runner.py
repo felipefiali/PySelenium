@@ -15,7 +15,7 @@ class TestTestResult(TestCase):
     """"Has unit tests for the TestResult class"""
 
     def test_add_step_result(self):
-        test_result = TestResult()
+        test_result = TestResult(Test())
 
         test_result.add_step_result(StepResult(Click()))
         test_result.add_step_result(StepResult(Click()))

@@ -13,3 +13,10 @@ class TestTest(TestCase):
             test.add_step(Click())
 
         self.assertEqual(len(test.steps), 10)
+
+    def test_init(self):
+        test_id = 'some id for the test'
+
+        test = Test(test_id)
+
+        self.assertEqual(test_id, test.test_id)

@@ -4,9 +4,9 @@ from test_metadata import Test
 from test_runner import TestRunner
 
 
-test = Test("Sample test")
+test = Test()
 test.add_step(Navigate('http://www.seleniumhq.org'))
-test.add_step(Click(css_path='#sidebar > div.downloadBox > a foo',
+test.add_step(Click(css_path='#sidebar > div.downloadBox > a',
                     hint='Download button'))
 
 test_runner = TestRunner(test)

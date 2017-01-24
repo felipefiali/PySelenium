@@ -1,7 +1,7 @@
 class Test:
     """"The base class for the tests"""
 
-    def __init__(self, test_id):
+    def __init__(self, test_id=''):
         self.steps = []
         self.test_id = test_id
 
