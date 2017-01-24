@@ -1,6 +1,6 @@
 from unittest import TestCase
 from test_metadata import Test
-from test_steps import Click
+from tests.test_data import any_click
 
 
 class TestTest(TestCase):
@@ -10,7 +10,7 @@ class TestTest(TestCase):
         test = Test()
 
         for i in range(10):
-            test.add_step(Click())
+            test.add_step(any_click())
 
         self.assertEqual(len(test.steps), 10)
 

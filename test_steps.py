@@ -5,7 +5,7 @@ from test_metadata import Step
 class Click(ElementFinder, Step):
     """A test step that simulates a click on an element"""
 
-    def __init__(self, css_path='', hint=''):
+    def __init__(self, css_path, hint):
         super().__init__(css_path, hint)
 
     def run(self, driver):
@@ -22,7 +22,7 @@ class Click(ElementFinder, Step):
 class Navigate(Step):
     """A test step that navigates to a given URL"""
 
-    def __init__(self, url=''):
+    def __init__(self, url):
         super().__init__()
         self.url = url
 

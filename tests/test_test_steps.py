@@ -1,8 +1,13 @@
 from unittest import TestCase
 from tests.testables import DriverTestable
+from tests.test_data import any_click
+from tests.test_data import any_navigate
+from tests.test_data import ANY_CSS_PATH
+from tests.test_data import ANY_HINT
+from tests.test_data import ANY_URL
+from test_steps import StepResult
 from test_steps import Click
 from test_steps import Navigate
-from test_steps import StepResult
 from mock import patch
 
 
@@ -10,7 +15,7 @@ class TestStepResult(TestCase):
     """"Has unit tests for the StepResult class"""
 
     def test_initializer(self):
-        click = Click()
+        click = any_click()
 
         step_result = StepResult(click)
 
@@ -21,7 +26,7 @@ class TestStepResult(TestCase):
     def test_add_exception(self):
         exception = TypeError()
 
-        step_result = StepResult(Click())
+        step_result = StepResult(any_click())
         step_result.exception = exception
 
         self.assertEqual(step_result.exception, exception)
@@ -31,13 +36,19 @@ class TestStepResult(TestCase):
 class TestClick(TestCase):
     """"Has unit tests for the Click class"""
 
+    def test_initializer(self):
+        click = Click(ANY_CSS_PATH, ANY_HINT)
+
+        self.assertEqual(ANY_CSS_PATH, click.css_path)
+        self.assertEqual(ANY_HINT, click.hint)
+
     def test_run_click_exception(self):
         driver_testable = DriverTestable()
 
         with patch.object(driver_testable, 'click') as click_mock:
             exception = Exception()
             click_mock.side_effect = exception
-            click = Click()
+            click = any_click()
             click.css_path = 'any css path'
             click.hint = 'any hint'
 
@@ -51,12 +62,16 @@ class TestClick(TestCase):
 
 class TestNavigate(TestCase):
     """"Has unit tests for the Navigate class"""
+    def test_initializer(self):
+        navigate = Navigate(ANY_URL)
+
+        self.assertEqual(ANY_URL, navigate.url)
 
     def test_run_navigate(self):
         driver_testable = DriverTestable()
 
         with patch.object(driver_testable, 'navigate') as navigate_mock:
-            navigate = Navigate()
+            navigate = any_navigate()
             navigate.url = 'http://anyurl.com'
 
             step_result = navigate.run(driver_testable)
@@ -71,7 +86,7 @@ class TestNavigate(TestCase):
         with patch.object(driver_testable, 'navigate') as navigate_mock:
             exception = Exception()
             navigate_mock.side_effect = exception
-            navigate = Navigate()
+            navigate = any_navigate()
             navigate.url = 'http://anyurl.com'
 
             step_result = navigate.run(driver_testable)
