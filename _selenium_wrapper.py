@@ -48,6 +48,7 @@ class Driver:
         """Starts the driver once the object enters context"""
 
         self.driver = self._get_web_driver()
+        self.driver.maximize_window()
 
         return self
 
