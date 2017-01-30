@@ -65,6 +65,59 @@ class TestClick(TestCase):
             self.assertEqual(step_result.step, click)
             self.assertEqual(step_result.exception, exception)
 
+    def test_run_click(self):
+        driver_testable = DriverTestable()
+
+        with patch.object(driver_testable, 'click') as click_mock:
+            click = any_click()
+
+            step_result = click.run(driver_testable)
+
+            click_mock.assert_called_with(click.css_path, click.hint)
+            self.assertTrue(step_result.success)
+            self.assertEqual(step_result.step, click)
+            self.assertIsNone(step_result.exception)
+
+
+class TestClickIfFound(TestCase):
+    """"Has Unit tests for the ClickIfFound class"""
+
+    def test_initializer(self):
+        click_if_found = ClickIfFound(ANY_CSS_PATH, ANY_HINT)
+
+        self.assertEqual(click_if_found.css_path, ANY_CSS_PATH)
+        self.assertEqual(click_if_found.hint, ANY_HINT)
+
+    def test_click_if_found(self):
+        click_if_found = ClickIfFound(ANY_CSS_PATH, ANY_HINT)
+
+        driver_testable = DriverTestable()
+
+        with patch.object(driver_testable, 'click_if_found') as mock_driver:
+            step_result = click_if_found.run(driver_testable)
+
+            mock_driver.assert_called_with(click_if_found.css_path, click_if_found.hint)
+
+            self.assertTrue(step_result.success)
+            self.assertEqual(step_result.step, click_if_found)
+            self.assertIsNone(step_result.exception)
+
+    def test_click_if_found_exception(self):
+        click_if_found = ClickIfFound(ANY_CSS_PATH, ANY_HINT)
+
+        driver_testable = DriverTestable()
+
+        with patch.object(driver_testable, 'click_if_found') as mock_driver:
+            exception = Exception()
+            mock_driver.side_effect = exception
+            step_result = click_if_found.run(driver_testable)
+
+            mock_driver.assert_called_with(click_if_found.css_path, click_if_found.hint)
+
+            self.assertFalse(step_result.success)
+            self.assertEqual(step_result.step, click_if_found)
+            self.assertEqual(step_result.exception, exception)
+
 
 class TestNavigate(TestCase):
     """"Has unit tests for the Navigate class"""

@@ -88,6 +88,22 @@ class Driver:
 
         element.click()
 
+    def click_if_found(self, css_path, hint):
+        """Tries to click an element on the web page if once can be found.
+        Does nothing if the element is not found."""
+
+        if css_path is None or css_path == '':
+            raise ValueError('css-path')
+
+        element = None
+
+        try:
+            element = self.find_element(css_path, hint)
+        except ElementNotFoundError:
+            pass
+        else:
+            element.click()
+
     def get_element_attribute(self, css_path, hint, attribute_name):
         """"Tries to get an attribute value from an element on the web page.
         Raises errors if the element can't be found or if it doesn't have the specified attribute."""

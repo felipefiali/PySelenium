@@ -223,6 +223,36 @@ class TestDriver(TestCase):
         self.assertRaises(ValueError, testable_driver.get_element_value, '', ANY_HINT)
         self.assertRaises(ValueError, testable_driver.get_element_value, None, ANY_HINT)
 
+    def test_click_if_found(self):
+        testable_driver = DriverTestable()
+        element_stub = WebElementStub()
+
+        with patch.object(testable_driver, 'find_element', return_value=element_stub):
+            with patch.object(element_stub, 'click') as element_mock:
+
+                testable_driver.click_if_found(ANY_CSS_PATH, ANY_HINT)
+
+                self.assertTrue(element_mock.called)
+
+    def test_click_if_found_not_found(self):
+        testable_driver = DriverTestable()
+        element_stub = WebElementStub()
+
+        with patch.object(testable_driver, 'find_element', return_value=element_stub) as driver_mock:
+            with patch.object(element_stub, 'click') as element_mock:
+
+                driver_mock.side_effect = ElementNotFoundError(ANY_CSS_PATH, ANY_HINT, Exception())
+
+                testable_driver.click_if_found(ANY_CSS_PATH, ANY_HINT)
+
+                self.assertFalse(element_mock.called)
+
+    def test_click_if_found_css_path(self):
+        testable_driver = DriverTestable()
+
+        self.assertRaises(ValueError, testable_driver.click_if_found, '', ANY_HINT)
+        self.assertRaises(ValueError, testable_driver.click_if_found, None, ANY_HINT)
+
 
 class TestElementNotFoundError(TestCase):
     """Has unit tests for the ElementNotFoundError class"""
