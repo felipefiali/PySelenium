@@ -76,8 +76,7 @@ class AssertElementAttributeValue(ElementFinder, Step):
         attribute_value = None
 
         try:
-            attribute_value = driver.get_element_attribute(self.css_path, self.hint, self.attribute_name,
-                                                           self.expected_value)
+            attribute_value = driver.get_element_attribute(self.css_path, self.hint, self.attribute_name)
         except Exception as exception:
             step_result.exception = exception
         else:

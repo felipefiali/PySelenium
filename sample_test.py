@@ -15,11 +15,15 @@ def run():
                         hint='Download button'))
     # Asserts that the Download link for the Python version redirects to the correct URL
     test.add_step(AssertElementAttributeValue(css_path="#mainContent > table:nth-child(13) > tbody > tr:nth-child(4) > "
-                                                "td:nth-child(4) > a",
+                                              "td:nth-child(4) > a",
                                               hint="Download link for Python",
                                               attribute_name="href",
                                               expected_value="http://pypi.python.org/pypi/selenium"))
-    test.add_step(AssertElementValue())
+    # Asserts the text on the Python release date element
+    test.add_step(AssertElementValue(css_path='#mainContent > table:nth-child(13) > tbody > tr:nth-child(4) > '
+                                              'td:nth-child(3)',
+                                     hint='Python release date',
+                                     expected_value='2016-11-29'))
 
     test_runner = TestRunner(test)
     test_result = test_runner.run_test()

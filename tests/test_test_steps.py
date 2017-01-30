@@ -122,7 +122,7 @@ class TestAssertElementAttributeValue(TestCase):
             step_result = assert_attribute.run(driver_testable)
 
             driver_mock.assert_called_with(assert_attribute.css_path, assert_attribute.hint,
-                                           assert_attribute.attribute_name, assert_attribute.expected_value)
+                                           assert_attribute.attribute_name)
 
             self.assertTrue(step_result.success)
             self.assertEqual(step_result.step, assert_attribute)
@@ -139,7 +139,7 @@ class TestAssertElementAttributeValue(TestCase):
             step_result = assert_attribute.run(driver_testable)
 
             assert_value_mock.assert_called_with(assert_attribute.css_path, assert_attribute.hint,
-                                                 assert_attribute.attribute_name, assert_attribute.expected_value)
+                                                 assert_attribute.attribute_name)
 
             self.assertFalse(step_result.success)
             self.assertEqual(step_result.step, assert_attribute)
@@ -165,7 +165,7 @@ class TestAssertElementAttributeValue(TestCase):
             step_result = assert_attribute.run(driver_testable)
 
             assert_value_mock.assert_called_with(assert_attribute.css_path, assert_attribute.hint,
-                                                 assert_attribute.attribute_name, assert_attribute.expected_value)
+                                                 assert_attribute.attribute_name)
             self.assertFalse(step_result.success)
             self.assertEqual(step_result.step, assert_attribute)
             self.assertEqual(step_result.exception, exception)
