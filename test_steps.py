@@ -37,7 +37,32 @@ class Navigate(Step):
         return step_result
 
 
-class AssertAttributeValue(ElementFinder, Step):
+class AssertElementValue(ElementFinder, Step):
+    """A test step that asserts the value (text) inside an element"""
+
+    def __init__(self, css_path, hint, expected_value):
+        super().__init__(css_path, hint)
+
+        self.expected_value = expected_value
+
+    def run(self, driver):
+        step_result = StepResult(self)
+
+        element_value = None
+
+        try:
+            element_value = driver.get_element_value(self.css_path, self.hint)
+        except Exception as exception:
+            step_result.exception = exception
+        else:
+            if element_value != self.expected_value:
+                step_result.exception = ElementValueIncorrectError(self.css_path, self.hint, element_value,
+                                                                   self.expected_value)
+
+        return step_result
+
+
+class AssertElementAttributeValue(ElementFinder, Step):
     """A test step that compares a given value to a given attribute value of the web element"""
 
     def __init__(self, css_path, hint, attribute_name, expected_value):
@@ -106,5 +131,17 @@ class ElementAttributeValueIncorrectError(StepExecutionError):
         self.css_path = css_path
         self.hint = hint
         self.attribute_name = attribute_name
+        self.actual_value = actual_value
+        self.expected_value = expected_value
+
+
+class ElementValueIncorrectError(StepExecutionError):
+    """"An exception thrown when the value of an element is different from the expected value"""
+
+    def __init__(self, css_path, hint, actual_value, expected_value):
+        super().__init__()
+
+        self.css_path = css_path
+        self.hint = hint
         self.actual_value = actual_value
         self.expected_value = expected_value

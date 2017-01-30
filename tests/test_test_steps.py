@@ -101,11 +101,11 @@ class TestNavigate(TestCase):
             self.assertEqual(step_result.exception, exception)
 
 
-class TestAssertAttributeValue(TestCase):
-    """"Has unit tests for the AssertAttributeValue class"""
+class TestAssertElementAttributeValue(TestCase):
+    """"Has unit tests for the AssertElementAttributeValue class"""
 
     def test_initializer(self):
-        assert_attribute = AssertAttributeValue(ANY_CSS_PATH, ANY_HINT, ANY_ATTRIBUTE_NAME, ANY_VALUE)
+        assert_attribute = AssertElementAttributeValue(ANY_CSS_PATH, ANY_HINT, ANY_ATTRIBUTE_NAME, ANY_VALUE)
 
         self.assertEqual(assert_attribute.css_path, ANY_CSS_PATH)
         self.assertEqual(assert_attribute.hint, ANY_HINT)
@@ -118,13 +118,12 @@ class TestAssertAttributeValue(TestCase):
         assert_attribute = any_assert_attribute()
 
         with patch.object(driver_testable, 'get_element_attribute', return_value=assert_attribute.expected_value) \
-                as assert_value_mock:
-            assert_attribute = any_assert_attribute()
-
+                as driver_mock:
             step_result = assert_attribute.run(driver_testable)
 
-            assert_value_mock.assert_called_with(assert_attribute.css_path, assert_attribute.hint,
-                                                 assert_attribute.attribute_name, assert_attribute.expected_value)
+            driver_mock.assert_called_with(assert_attribute.css_path, assert_attribute.hint,
+                                           assert_attribute.attribute_name, assert_attribute.expected_value)
+
             self.assertTrue(step_result.success)
             self.assertEqual(step_result.step, assert_attribute)
 
@@ -169,4 +168,63 @@ class TestAssertAttributeValue(TestCase):
                                                  assert_attribute.attribute_name, assert_attribute.expected_value)
             self.assertFalse(step_result.success)
             self.assertEqual(step_result.step, assert_attribute)
+            self.assertEqual(step_result.exception, exception)
+
+
+class TestAssertElementValue(TestCase):
+    """Has unit tests for the AssertElementValue class"""
+
+    def test_initializer(self):
+        assert_element = AssertElementValue(ANY_CSS_PATH, ANY_HINT, ANY_VALUE)
+
+        self.assertEqual(assert_element.css_path, ANY_CSS_PATH)
+        self.assertEqual(assert_element.hint, ANY_HINT)
+        self.assertEqual(assert_element.expected_value, ANY_VALUE)
+
+    def test_run_assert_element_value(self):
+        driver_testable = DriverTestable()
+
+        assert_element = AssertElementValue(ANY_CSS_PATH, ANY_HINT, ANY_VALUE)
+
+        with patch.object(driver_testable, 'get_element_value', return_value=ANY_VALUE) as driver_mock:
+            step_result = assert_element.run(driver_testable)
+
+            driver_mock.assert_called_with(assert_element.css_path, assert_element.hint)
+
+            self.assertTrue(step_result.success)
+            self.assertEqual(step_result.step, assert_element)
+            self.assertIsNone(step_result.exception)
+
+    def test_run_assert_element_different_values(self):
+        driver_testable = DriverTestable()
+
+        assert_element = AssertElementValue(ANY_CSS_PATH, ANY_HINT, ANY_VALUE)
+
+        with patch.object(driver_testable, 'get_element_value', return_value=ANY_OTHER_VALUE) as driver_mock:
+            step_result = assert_element.run(driver_testable)
+
+            driver_mock.assert_called_with(assert_element.css_path, assert_element.hint)
+
+            self.assertFalse(step_result.success)
+            self.assertEqual(step_result.step, assert_element)
+            self.assertEqual(step_result.exception.css_path, ANY_CSS_PATH)
+            self.assertEqual(step_result.exception.hint, ANY_HINT)
+            self.assertEqual(step_result.exception.expected_value, ANY_VALUE)
+            self.assertEqual(step_result.exception.actual_value, ANY_OTHER_VALUE)
+
+    def test_assert_value_selenium_throws(self):
+        driver_testable = DriverTestable()
+
+        assert_element = AssertElementValue(ANY_CSS_PATH, ANY_HINT, ANY_VALUE)
+
+        with patch.object(driver_testable, 'get_element_value') as driver_mock:
+            exception = Exception()
+
+            driver_mock.side_effect = exception
+
+            step_result = assert_element.run(driver_testable)
+
+            driver_mock.assert_called_with(assert_element.css_path, assert_element.hint)
+
+            self.assertFalse(step_result.success)
             self.assertEqual(step_result.exception, exception)

@@ -72,7 +72,7 @@ class Driver:
 
     def click(self, css_path, hint):
         """Tries to find an element on the web page and click it.
-        Raises an error if the element can't be found or clicked"""
+        Raises an error if the element can't be found or clicked."""
 
         if css_path is None or css_path == '':
             raise ValueError('css_path')
@@ -88,18 +88,15 @@ class Driver:
 
         element.click()
 
-    def get_element_attribute(self, css_path, hint, attribute_name, expected_value):
+    def get_element_attribute(self, css_path, hint, attribute_name):
         """"Tries to get an attribute value from an element on the web page.
-        Raises errors if the element can't be found or if it doesn't have the specified attribute"""
+        Raises errors if the element can't be found or if it doesn't have the specified attribute."""
 
         if css_path is None or css_path == '':
             raise ValueError('css_path')
 
         if attribute_name is None or attribute_name == '':
             raise ValueError('attribute_name')
-
-        if expected_value is None or expected_value == '':
-            raise ValueError('expected_value')
 
         element = self.find_element(css_path, hint)
 
@@ -113,9 +110,20 @@ class Driver:
 
         return attribute_value
 
+    def get_element_value(self, css_path, hint):
+        """Tries to get the value of an element on the web page.
+        Raises errors if the element can't be found."""
+
+        if css_path is None or css_path == '':
+            raise ValueError('css_path')
+
+        element = self.find_element(css_path, hint)
+
+        return element.text
+
     def find_element(self, css_path, hint):
         """Tries to find an element on the web page.
-         Raises an error if the element can't be found"""
+         Raises an error if the element can't be found."""
 
         element = None
 

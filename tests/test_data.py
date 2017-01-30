@@ -1,6 +1,6 @@
 from test_steps import Click
 from test_steps import Navigate
-from test_steps import AssertAttributeValue
+from test_steps import AssertElementAttributeValue
 
 
 ANY_CSS_PATH = 'any css path'
@@ -20,4 +20,4 @@ def any_navigate():
 
 
 def any_assert_attribute():
-    return AssertAttributeValue(ANY_CSS_PATH, ANY_HINT, ANY_ATTRIBUTE_NAME, ANY_VALUE)
+    return AssertElementAttributeValue(ANY_CSS_PATH, ANY_HINT, ANY_ATTRIBUTE_NAME, ANY_VALUE)

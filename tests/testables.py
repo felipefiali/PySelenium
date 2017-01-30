@@ -13,9 +13,15 @@ class DriverStub:
     def close(self):
         pass
 
+    def maximize_window(self):
+        pass
+
 
 class WebElementStub:
     """"A stub that allows unit testing of interactions with web elements"""
+
+    def __init__(self):
+        self.text = ''
 
     def click(self):
         pass

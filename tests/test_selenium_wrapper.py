@@ -5,7 +5,6 @@ from tests.testables import WebElementStub
 from tests.test_data import ANY_CSS_PATH
 from tests.test_data import ANY_HINT
 from tests.test_data import ANY_VALUE
-from tests.test_data import ANY_OTHER_VALUE
 from tests.test_data import ANY_ATTRIBUTE_NAME
 from _selenium_wrapper import ElementNotFoundError
 from _selenium_wrapper import NoSuchAttributeError
@@ -13,6 +12,7 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.expected_conditions import presence_of_element_located
 from mock import patch
+from mock import PropertyMock
 
 
 class TestDriver(TestCase):
@@ -50,7 +50,7 @@ class TestDriver(TestCase):
         web_element_stub = WebElementStub()
 
         with patch.object(web_element_stub, 'click') as clicked_mock:
-            with patch.object(web_element_stub, 'is_enabled') as enabled_mock:
+            with patch.object(web_element_stub, 'is_enabled'):
                 web_driver_wait_testable.inject_web_element_stub(web_element_stub)
 
                 testable_driver.inject_web_driver_wait_testable(web_driver_wait_testable)
@@ -142,8 +142,7 @@ class TestDriver(TestCase):
 
         with patch.object(testable_driver, 'find_element', return_value=element_stub) as find_element_mock:
             with patch.object(element_stub, 'get_attribute', return_value=ANY_VALUE) as element_mock:
-                returned_value = testable_driver.get_element_attribute(ANY_CSS_PATH, ANY_HINT, ANY_ATTRIBUTE_NAME,
-                                                                       ANY_OTHER_VALUE)
+                returned_value = testable_driver.get_element_attribute(ANY_CSS_PATH, ANY_HINT, ANY_ATTRIBUTE_NAME)
 
                 self.assertEqual(returned_value, ANY_VALUE)
 
@@ -153,18 +152,11 @@ class TestDriver(TestCase):
     def test_get_attribute_empty_args(self):
         testable_driver = DriverTestable()
 
-        self.assertRaises(ValueError, testable_driver.get_element_attribute, None, ANY_HINT, ANY_ATTRIBUTE_NAME,
-                          ANY_VALUE)
-        self.assertRaises(ValueError, testable_driver.get_element_attribute, '', ANY_HINT, ANY_ATTRIBUTE_NAME,
-                          ANY_VALUE)
+        self.assertRaises(ValueError, testable_driver.get_element_attribute, None, ANY_HINT, ANY_ATTRIBUTE_NAME)
+        self.assertRaises(ValueError, testable_driver.get_element_attribute, '', ANY_HINT, ANY_ATTRIBUTE_NAME)
 
-        self.assertRaises(ValueError, testable_driver.get_element_attribute, ANY_CSS_PATH, ANY_HINT, None, ANY_VALUE)
-        self.assertRaises(ValueError, testable_driver.get_element_attribute, ANY_CSS_PATH, ANY_HINT, '', ANY_VALUE)
-
-        self.assertRaises(ValueError, testable_driver.get_element_attribute, ANY_CSS_PATH, ANY_HINT, ANY_ATTRIBUTE_NAME,
-                          None)
-        self.assertRaises(ValueError, testable_driver.get_element_attribute, ANY_CSS_PATH, ANY_HINT, ANY_ATTRIBUTE_NAME,
-                          '')
+        self.assertRaises(ValueError, testable_driver.get_element_attribute, ANY_CSS_PATH, ANY_HINT, None)
+        self.assertRaises(ValueError, testable_driver.get_element_attribute, ANY_CSS_PATH, ANY_HINT, '')
 
     def test_get_attribute_selenium_throws(self):
         testable_driver = DriverTestable()
@@ -176,8 +168,7 @@ class TestDriver(TestCase):
                 element_mock.side_effect = inner_exception
 
                 try:
-                    testable_driver.get_element_attribute(ANY_CSS_PATH, ANY_HINT, ANY_ATTRIBUTE_NAME,
-                                                          ANY_OTHER_VALUE)
+                    testable_driver.get_element_attribute(ANY_CSS_PATH, ANY_HINT, ANY_ATTRIBUTE_NAME)
                 except NoSuchAttributeError as exception:
                     self.assertEqual(exception.css_path, ANY_CSS_PATH)
                     self.assertEqual(exception.hint, ANY_HINT)
@@ -189,11 +180,10 @@ class TestDriver(TestCase):
         element_stub = WebElementStub()
 
         with patch.object(testable_driver, 'find_element', return_value=element_stub):
-            with patch.object(element_stub, 'get_attribute', return_value=None) as element_mock:
+            with patch.object(element_stub, 'get_attribute', return_value=None):
 
                 try:
-                    testable_driver.get_element_attribute(ANY_CSS_PATH, ANY_HINT, ANY_ATTRIBUTE_NAME,
-                                                          ANY_OTHER_VALUE)
+                    testable_driver.get_element_attribute(ANY_CSS_PATH, ANY_HINT, ANY_ATTRIBUTE_NAME)
                 except NoSuchAttributeError as exception:
                     self.assertEqual(exception.css_path, ANY_CSS_PATH)
                     self.assertEqual(exception.hint, ANY_HINT)
@@ -205,16 +195,33 @@ class TestDriver(TestCase):
         element_stub = WebElementStub()
 
         with patch.object(testable_driver, 'find_element', return_value=element_stub):
-            with patch.object(element_stub, 'get_attribute', return_value='') as element_mock:
+            with patch.object(element_stub, 'get_attribute', return_value=''):
 
                 try:
-                    testable_driver.get_element_attribute(ANY_CSS_PATH, ANY_HINT, ANY_ATTRIBUTE_NAME,
-                                                          ANY_OTHER_VALUE)
+                    testable_driver.get_element_attribute(ANY_CSS_PATH, ANY_HINT, ANY_ATTRIBUTE_NAME)
                 except NoSuchAttributeError as exception:
                     self.assertEqual(exception.css_path, ANY_CSS_PATH)
                     self.assertEqual(exception.hint, ANY_HINT)
                     self.assertEqual(exception.attribute_name, ANY_ATTRIBUTE_NAME)
                     self.assertEqual(exception.inner_exception, None)
+
+    def test_get_element_value(self):
+        testable_driver = DriverTestable()
+        element_stub = WebElementStub()
+
+        with patch.object(testable_driver, 'find_element', return_value=element_stub):
+            with patch.object(element_stub, 'text', new_callable=PropertyMock) as element_mock:
+                type(element_mock).text = PropertyMock(return_value=ANY_VALUE)
+
+                attribute_value = testable_driver.get_element_value(ANY_CSS_PATH, ANY_HINT)
+
+                self.assertEqual(ANY_VALUE, attribute_value.text)
+
+    def test_get_element_value_exception(self):
+        testable_driver = DriverTestable()
+
+        self.assertRaises(ValueError, testable_driver.get_element_value, '', ANY_HINT)
+        self.assertRaises(ValueError, testable_driver.get_element_value, None, ANY_HINT)
 
 
 class TestElementNotFoundError(TestCase):
