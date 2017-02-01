@@ -230,10 +230,10 @@ class TestDriver(TestCase):
         testable_driver = DriverTestable()
         element_stub = WebElementStub()
 
-        with patch.object(testable_driver, 'find_element', return_value=element_stub):
+        with patch.object(testable_driver, '_find_element_with_timeout', return_value=element_stub):
             with patch.object(element_stub, 'click') as element_mock:
 
-                testable_driver.click_if_found(ANY_CSS_PATH, ANY_HINT)
+                testable_driver.click_if_found(ANY_CSS_PATH, ANY_HINT, ANY_WAIT_TIME)
 
                 self.assertTrue(element_mock.called)
 
@@ -241,20 +241,23 @@ class TestDriver(TestCase):
         testable_driver = DriverTestable()
         element_stub = WebElementStub()
 
-        with patch.object(testable_driver, 'find_element', return_value=element_stub) as driver_mock:
+        with patch.object(testable_driver, '_find_element_with_timeout', return_value=element_stub) as driver_mock:
             with patch.object(element_stub, 'click') as element_mock:
 
                 driver_mock.side_effect = ElementNotFoundError(ANY_CSS_PATH, ANY_HINT, Exception())
 
-                testable_driver.click_if_found(ANY_CSS_PATH, ANY_HINT)
+                testable_driver.click_if_found(ANY_CSS_PATH, ANY_HINT, ANY_WAIT_TIME)
 
                 self.assertFalse(element_mock.called)
 
-    def test_click_if_found_css_path(self):
-        testable_driver = DriverTestable()
+    def test_click_if_found_empty_args(self):
+        driver_testable = DriverTestable()
 
-        self.assertRaises(ValueError, testable_driver.click_if_found, '', ANY_HINT)
-        self.assertRaises(ValueError, testable_driver.click_if_found, None, ANY_HINT)
+        self.assertRaises(ValueError, driver_testable.click_if_found, '', '', ANY_WAIT_TIME)
+        self.assertRaises(ValueError, driver_testable.click_if_found, None, '', ANY_WAIT_TIME)
+
+        self.assertRaises(ValueError, driver_testable.click_if_found, ANY_CSS_PATH, '', None)
+        self.assertRaises(ValueError, driver_testable.click_if_found, ANY_CSS_PATH, '', -66)
 
     def test_can_find_element(self):
         driver_testable = DriverTestable()

@@ -86,15 +86,18 @@ class Driver:
 
         element.click()
 
-    def click_if_found(self, css_path, hint):
-        """Tries to click an element on the web page if once can be found.
+    def click_if_found(self, css_path, hint, wait_time):
+        """Tries to click an element on the web page for the time specified as the wait time.
         Does nothing if the element is not found."""
 
         if css_path is None or css_path == '':
             raise ValueError('css-path')
 
+        if wait_time is None or wait_time < 0:
+            raise ValueError('wait_time')
+
         try:
-            element = self.find_element(css_path, hint)
+            element = self._find_element_with_timeout(css_path, hint, wait_time)
         except ElementNotFoundError:
             pass
         else:

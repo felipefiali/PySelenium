@@ -91,14 +91,16 @@ class AssertElementAttributeValue(ElementFinder, Step):
 class ClickIfFound(ElementFinder, Step):
     """A test step that clicks an element if it is found but doesn't fail if it's not found"""
 
-    def __init__(self, css_path, hint):
+    def __init__(self, css_path, hint, wait_time):
         super().__init__(css_path, hint)
+
+        self.wait_time = wait_time
 
     def run(self, driver):
         step_result = StepResult(self)
 
         try:
-            driver.click_if_found(self.css_path, self.hint)
+            driver.click_if_found(self.css_path, self.hint, self.wait_time)
         except Exception as exception:
             step_result.exception = exception
 
