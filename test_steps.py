@@ -105,6 +105,29 @@ class ClickIfFound(ElementFinder, Step):
         return step_result
 
 
+class AssertElementNotPresent(ElementFinder, Step):
+    """Asserts that an element at a given CSS path is not present on the web page
+     after trying to find it for a given time"""
+
+    def __init__(self, css_path, hint, wait_time):
+        super().__init__(css_path, hint)
+
+        self.wait_time = wait_time
+
+    def run(self, driver):
+        step_result = StepResult(self)
+
+        try:
+            element_found = driver.can_find_element(self.css_path, self.wait_time)
+        except Exception as exception:
+            step_result.exception = exception
+        else:
+            if element_found:
+                step_result.exception = ElementShouldNotBePresentError(self.css_path, self.hint, self.wait_time)
+
+        return step_result
+
+
 class StepResult:
     """Represents the result of the execution of a test step.
 
@@ -161,3 +184,19 @@ class ElementValueIncorrectError(StepExecutionError):
         self.hint = hint
         self.actual_value = actual_value
         self.expected_value = expected_value
+
+
+class ElementShouldNotBePresentError(StepExecutionError):
+    """An exception thrown when an element that should not be present on the web page is found
+
+    Attributes:
+        - wait_time: A value, in seconds, that Selenium will keep looking for the element before considering that it is
+        not present
+    """
+
+    def __init__(self, css_path, hint, wait_time):
+        super().__init__()
+
+        self.css_path = css_path
+        self.hint = hint
+        self.wait_time = wait_time

@@ -281,3 +281,62 @@ class TestAssertElementValue(TestCase):
 
             self.assertFalse(step_result.success)
             self.assertEqual(step_result.exception, exception)
+
+
+class TestAssertElementNotPresent(TestCase):
+    """Has unit tests for the AssertElementNotPresent class"""
+
+    def test_initializer(self):
+        element_not_present = AssertElementNotPresent(ANY_CSS_PATH, ANY_HINT, ANY_WAIT_TIME)
+
+        self.assertEqual(element_not_present.css_path, ANY_CSS_PATH)
+        self.assertEqual(element_not_present.hint, ANY_HINT)
+        self.assertEqual(element_not_present.wait_time, ANY_WAIT_TIME)
+
+    def test_assert_element_not_present(self):
+        driver_testable = DriverTestable()
+
+        with patch.object(driver_testable, 'can_find_element', return_value=False) as driver_mock:
+            assert_element_not_present = AssertElementNotPresent(ANY_CSS_PATH, ANY_HINT, ANY_WAIT_TIME)
+
+            step_result = assert_element_not_present.run(driver_testable)
+
+            driver_mock.assert_called_with(ANY_CSS_PATH, ANY_WAIT_TIME)
+
+            self.assertIsNone(step_result.exception)
+            self.assertEqual(step_result.step, assert_element_not_present)
+            self.assertTrue(step_result.success)
+
+    def test_assert_element_not_present_fails(self):
+        driver_testable = DriverTestable()
+
+        with patch.object(driver_testable, 'can_find_element', return_value=True) as driver_mock:
+            assert_element_not_present = AssertElementNotPresent(ANY_CSS_PATH, ANY_HINT, ANY_WAIT_TIME)
+
+            step_result = assert_element_not_present.run(driver_testable)
+
+            driver_mock.assert_called_with(ANY_CSS_PATH, ANY_WAIT_TIME)
+
+            self.assertEqual(step_result.exception.css_path, ANY_CSS_PATH)
+            self.assertEqual(step_result.exception.hint, ANY_HINT)
+            self.assertEqual(step_result.exception.wait_time, ANY_WAIT_TIME)
+            self.assertEqual(step_result.step, assert_element_not_present)
+            self.assertFalse(step_result.success)
+
+    def test_assert_element_not_present_selenium_throws(self):
+        driver_testable = DriverTestable()
+
+        with patch.object(driver_testable, 'can_find_element') as driver_mock:
+            exception = Exception()
+
+            driver_mock.side_effect = exception
+
+            assert_element_not_present = AssertElementNotPresent(ANY_CSS_PATH, ANY_HINT, ANY_WAIT_TIME)
+
+            step_result = assert_element_not_present.run(driver_testable)
+
+            driver_mock.assert_called_with(ANY_CSS_PATH, ANY_WAIT_TIME)
+
+            self.assertEqual(step_result.exception, exception)
+            self.assertEqual(step_result.step, assert_element_not_present)
+            self.assertFalse(step_result.success)

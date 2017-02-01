@@ -2,10 +2,7 @@ from unittest import TestCase
 from tests.testables import DriverTestable
 from tests.testables import WebDriverWaitTestable
 from tests.testables import WebElementStub
-from tests.test_data import ANY_CSS_PATH
-from tests.test_data import ANY_HINT
-from tests.test_data import ANY_VALUE
-from tests.test_data import ANY_ATTRIBUTE_NAME
+from tests.test_data import *
 from _selenium_wrapper import ElementNotFoundError
 from _selenium_wrapper import NoSuchAttributeError
 from selenium.common.exceptions import NoSuchElementException
@@ -136,6 +133,12 @@ class TestDriver(TestCase):
                 self.assertEqual(ex.css_path, ANY_CSS_PATH)
                 self.assertEqual(ex.hint, ANY_HINT)
 
+    def test_find_element_css_path_empty(self):
+        driver_testable = DriverTestable()
+
+        self.assertRaises(ValueError, driver_testable.find_element, '', ANY_HINT)
+        self.assertRaises(ValueError, driver_testable.find_element, None, ANY_HINT)
+
     def test_get_attribute_value(self):
         testable_driver = DriverTestable()
         element_stub = WebElementStub()
@@ -252,6 +255,37 @@ class TestDriver(TestCase):
 
         self.assertRaises(ValueError, testable_driver.click_if_found, '', ANY_HINT)
         self.assertRaises(ValueError, testable_driver.click_if_found, None, ANY_HINT)
+
+    def test_can_find_element(self):
+        driver_testable = DriverTestable()
+
+        with patch.object(driver_testable, '_find_element_with_timeout') as driver_mock:
+            returned_value = driver_testable.can_find_element(ANY_CSS_PATH, ANY_WAIT_TIME)
+
+            driver_mock.assert_called_with(ANY_CSS_PATH, '', ANY_WAIT_TIME)
+
+            self.assertTrue(returned_value)
+
+    def test_can_find_element_error(self):
+        driver_testable = DriverTestable()
+
+        with patch.object(driver_testable, '_find_element_with_timeout') as driver_mock:
+            driver_mock.side_effect = ElementNotFoundError(ANY_CSS_PATH, ANY_HINT, None)
+
+            returned_value = driver_testable.can_find_element(ANY_CSS_PATH, ANY_WAIT_TIME)
+
+            driver_mock.assert_called_with(ANY_CSS_PATH, '', ANY_WAIT_TIME)
+
+            self.assertFalse(returned_value)
+
+    def test_can_find_element_empty_args(self):
+        driver_testable = DriverTestable()
+
+        self.assertRaises(ValueError, driver_testable.can_find_element, '', ANY_WAIT_TIME)
+        self.assertRaises(ValueError, driver_testable.can_find_element, None, ANY_WAIT_TIME)
+
+        self.assertRaises(ValueError, driver_testable.can_find_element, ANY_CSS_PATH, None)
+        self.assertRaises(ValueError, driver_testable.can_find_element, ANY_CSS_PATH, -99)
 
 
 class TestElementNotFoundError(TestCase):

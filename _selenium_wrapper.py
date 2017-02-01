@@ -77,8 +77,6 @@ class Driver:
         if css_path is None or css_path == '':
             raise ValueError('css_path')
 
-        element = None
-
         try:
             element = self._get_web_driver_wait(self.driver, 10).until(
                 expected_conditions.element_to_be_clickable((By.CSS_SELECTOR, css_path))
@@ -94,8 +92,6 @@ class Driver:
 
         if css_path is None or css_path == '':
             raise ValueError('css-path')
-
-        element = None
 
         try:
             element = self.find_element(css_path, hint)
@@ -141,10 +137,30 @@ class Driver:
         """Tries to find an element on the web page.
          Raises an error if the element can't be found."""
 
-        element = None
+        if css_path is None or css_path == '':
+            raise ValueError('css_path')
+
+        return self._find_element_with_timeout(css_path, hint, 10)
+
+    def can_find_element(self, css_path, wait_time):
+        """Tries to find an element at the given CSS path. Returns true if one is found, false otherwise."""
+
+        if css_path is None or css_path == '':
+            raise ValueError('css_path')
+
+        if wait_time is None or wait_time < 0:
+            raise ValueError('wait_time')
 
         try:
-            element = self._get_web_driver_wait(self.driver, 10).until(
+            self._find_element_with_timeout(css_path, '', wait_time)
+        except ElementNotFoundError:
+            return False
+        else:
+            return True
+
+    def _find_element_with_timeout(self, css_path, hint, timeout):
+        try:
+            element = self._get_web_driver_wait(self.driver, timeout).until(
                 self._get_presence_of_element_located(css_path)
             )
         except (NoSuchElementException, TimeoutException) as exception:

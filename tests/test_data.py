@@ -9,6 +9,7 @@ ANY_URL = 'any url'
 ANY_ATTRIBUTE_NAME = 'any attribute name'
 ANY_VALUE = 'foo bar'
 ANY_OTHER_VALUE = ANY_URL
+ANY_WAIT_TIME = 1
 
 
 def any_click():
