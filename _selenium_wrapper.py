@@ -1,14 +1,16 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.select import Select
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import UnexpectedTagNameException
 
 
 class ElementNotFoundError(Exception):
-    """Exception raised when the element referenced in a step is not found
+    """Exception raised when the element referenced in a step is not found.
 
     Attributes:
         css_path -- The supplied CSS path of the element
@@ -23,7 +25,7 @@ class ElementNotFoundError(Exception):
 
 
 class NoSuchAttributeError(Exception):
-    """Exception raised when the web element does not have a specified attribute
+    """Exception raised when the web element does not have a specified attribute.
 
     Attributes:
         css_path -- The CSS path of the element
@@ -40,18 +42,51 @@ class NoSuchAttributeError(Exception):
 
 
 class CannotTypeTextError(Exception):
-    """Exception raised when the web element is found but the typing of the text fails for some reason
+    """Exception raised when the web element is found but the typing of the text fails for some reason.
 
     Attributes:
-        css_path - The CSS path of the element
-        hint - The element hint
-        text - The text to be typed on the element
+        css_path -- The CSS path of the element
+        hint -- The element hint
+        text -- The text to be typed on the element
+        inner_exception -- The exception that may have been thrown by the web driver, None otherwise
     """
 
     def __init__(self, css_path, hint, text, exception):
         self.css_path = css_path
         self.hint = hint
         self.text = text
+        self.inner_exception = exception
+
+
+class InvalidElementException(Exception):
+    """Exception raised when an invalid operation is performed on a web element.
+
+    Attributes:
+        css_path -- The CSS path of the element
+        hint -- The element hint
+        inner_exception -- The exception that may have been thrown by the web driver, None otherwise
+    """
+
+    def __init__(self, css_path, hint, exception):
+        self.css_path = css_path
+        self.hint = hint
+        self.inner_exception = exception
+
+
+class InvalidOptionTextException(Exception):
+    """Exception raised when there is no option with the specified text in the Select web element.
+
+    Attributes:
+        css_path -- The CSS path of the element
+        hint -- The element hint
+        option_text -- The invalid specified option text
+        inner_exception -- The exception that may have been thrown by the web druver, None otherwise
+    """
+
+    def __init__(self, css_path, hint, option_text, exception):
+        self.css_path = css_path
+        self.hint = hint
+        self.option_text = option_text
         self.inner_exception = exception
 
 
@@ -193,6 +228,22 @@ class Driver:
         except Exception as exception:
             raise CannotTypeTextError(css_path, hint, text, exception)
 
+    def select_drop_down_item_by_text(self, css_path, hint, item_text):
+        """Finds a Select element and selects an item by its text.
+        Raises errors if the element can not be found or if it' not a Select web element."""
+
+        if item_text is None or item_text == '':
+            raise ValueError('item_text')
+
+        element = self.find_element(css_path, hint)
+
+        try:
+            self._get_select(element).select_by_visible_text(item_text)
+        except UnexpectedTagNameException as unexpected_tag_ex:
+            raise InvalidElementException(css_path, hint, unexpected_tag_ex)
+        except NoSuchElementException as invalid_item_text:
+            raise InvalidOptionTextException(css_path, hint, item_text, invalid_item_text)
+
     def _find_element_with_timeout(self, css_path, hint, timeout):
         try:
             element = self._get_web_driver_wait(self.driver, timeout).until(
@@ -211,3 +262,6 @@ class Driver:
 
     def _get_presence_of_element_located(self, css_path):
         return expected_conditions.presence_of_element_located((By.CSS_SELECTOR, css_path))
+
+    def _get_select(self, web_element):
+        return Select(web_element)

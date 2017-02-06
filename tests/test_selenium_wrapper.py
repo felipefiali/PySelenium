@@ -3,9 +3,7 @@ from tests.testables import DriverTestable
 from tests.testables import WebDriverWaitTestable
 from tests.testables import WebElementStub
 from tests.test_data import *
-from _selenium_wrapper import ElementNotFoundError
-from _selenium_wrapper import NoSuchAttributeError
-from _selenium_wrapper import CannotTypeTextError
+from _selenium_wrapper import *
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import TimeoutException
@@ -327,6 +325,79 @@ class TestDriver(TestCase):
                     self.assertEqual(exception.text, ANY_TEXT)
                     self.assertEqual(exception.inner_exception, exception_to_be_thrown)
 
+    def test_select_drop_down_item_by_text(self):
+        driver_testable = DriverTestable()
+
+        element_stub = WebElementStub()
+        element_stub.tag_name = 'select'
+
+        with patch.object(driver_testable, '_get_select', return_value=element_stub) as get_selected_mock, \
+                patch.object(element_stub, 'select_by_visible_text') as select_mock, \
+                patch.object(driver_testable, 'find_element', return_value=element_stub) as find_element_mock:
+
+            driver_testable.select_drop_down_item_by_text(ANY_CSS_PATH, ANY_HINT, ANY_TEXT)
+
+            find_element_mock.assert_called_with(ANY_CSS_PATH, ANY_HINT)
+            get_selected_mock.assert_called_with(element_stub)
+            select_mock.assert_called_with(ANY_TEXT)
+
+    def test_select_drop_down_item_by_text_not_select(self):
+        driver_testable = DriverTestable()
+
+        element_stub = WebElementStub()
+        element_stub.tag_name = 'select'
+
+        with patch.object(driver_testable, '_get_select', return_value=element_stub) as get_selected_mock, \
+                patch.object(element_stub, 'select_by_visible_text'), \
+                patch.object(driver_testable, 'find_element', return_value=element_stub) as find_element_mock:
+
+            unexpected_tag_ex = UnexpectedTagNameException()
+
+            get_selected_mock.side_effect = unexpected_tag_ex
+
+            try:
+                driver_testable.select_drop_down_item_by_text(ANY_CSS_PATH, ANY_HINT, ANY_TEXT)
+            except InvalidElementException as exception:
+                self.assertEqual(exception.css_path, ANY_CSS_PATH)
+                self.assertEqual(exception.hint, ANY_HINT)
+                self.assertEqual(exception.inner_exception, unexpected_tag_ex)
+
+                find_element_mock.assert_called_with(ANY_CSS_PATH, ANY_HINT)
+
+    def test_select_drop_down_item_by_text_item_not_found(self):
+        driver_testable = DriverTestable()
+
+        element_stub = WebElementStub()
+        element_stub.tag_name = 'select'
+
+        with patch.object(driver_testable, '_get_select', return_value=element_stub) as get_selected_mock, \
+                patch.object(element_stub, 'select_by_visible_text') as select_mock, \
+                patch.object(driver_testable, 'find_element', return_value=element_stub) as find_element_mock:
+
+            no_such_element = NoSuchElementException()
+
+            select_mock.side_effect = no_such_element
+
+            try:
+                driver_testable.select_drop_down_item_by_text(ANY_CSS_PATH, ANY_HINT, ANY_TEXT)
+            except InvalidOptionTextException as exception:
+                self.assertEqual(exception.css_path, ANY_CSS_PATH)
+                self.assertEqual(exception.hint, ANY_HINT)
+                self.assertEqual(exception.option_text, ANY_TEXT)
+                self.assertEqual(exception.inner_exception, no_such_element)
+
+                find_element_mock.assert_called_with(ANY_CSS_PATH, ANY_HINT)
+                get_selected_mock.assert_called_with(element_stub)
+
+    def test_select_drop_down_item_empty_text(self):
+        driver_testable = DriverTestable()
+
+        self.assertRaises(ValueError, driver_testable.select_drop_down_item_by_text, ANY_CSS_PATH, ANY_HINT, '')
+        self.assertRaises(ValueError, driver_testable.select_drop_down_item_by_text, ANY_CSS_PATH, ANY_HINT, None)
+
+        self.assertRaises(ValueError, driver_testable.select_drop_down_item_by_text, None, ANY_HINT, ANY_TEXT)
+        self.assertRaises(ValueError, driver_testable.select_drop_down_item_by_text, '', ANY_HINT, ANY_TEXT)
+
 
 class TestElementNotFoundError(TestCase):
     """Has unit tests for the ElementNotFoundError class"""
@@ -372,3 +443,31 @@ class TestCannotTypeTextError(TestCase):
         self.assertEqual(cannot_type_text.hint, ANY_HINT)
         self.assertEqual(cannot_type_text.text, ANY_TEXT)
         self.assertEqual(cannot_type_text.inner_exception, exception)
+
+
+class TestInvalidElementException(TestCase):
+    """Has unit tests for the InvalidElementException class"""
+
+    def test_initializer(self):
+        exception = Exception()
+
+        invalid_element = InvalidElementException(ANY_CSS_PATH, ANY_HINT, exception)
+
+        self.assertEqual(invalid_element.css_path, ANY_CSS_PATH)
+        self.assertEqual(invalid_element.hint, ANY_HINT)
+        self.assertEqual(invalid_element.inner_exception, exception)
+
+
+class TestInvalidOptionTextException(TestCase):
+    """Has unit tests for the InvalidOptionTextException class"""
+
+    def test_initializer(self):
+        exception = Exception()
+
+        invalid_option = InvalidOptionTextException(ANY_CSS_PATH, ANY_HINT, ANY_TEXT, exception)
+
+        self.assertEqual(invalid_option.css_path, ANY_CSS_PATH)
+        self.assertEqual(invalid_option.hint, ANY_HINT)
+        self.assertEqual(invalid_option.option_text, ANY_TEXT)
+        self.assertEqual(invalid_option.inner_exception, exception)
+

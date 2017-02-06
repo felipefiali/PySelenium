@@ -38,6 +38,9 @@ class WebElementStub:
     def get_attribute(self, attribute_name):
         return attribute_name
 
+    def select_by_visible_text(self, item_text):
+        pass
+
 
 class DriverTestable(Driver):
     """A testable version of the Driver class which doesn't actually interact with Selenium"""
@@ -62,6 +65,9 @@ class DriverTestable(Driver):
 
     def inject_presence_of_element_located(self, presence_condition):
         self.presence_of_element_located = presence_condition
+
+    def _get_select(self, web_element):
+        return web_element
 
 
 class WebDriverWaitTestable(WebDriverWait):

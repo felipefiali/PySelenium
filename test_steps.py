@@ -149,6 +149,25 @@ class TypeText(ElementFinder, Step):
         return step_result
 
 
+class SelectDropDownItemByText(ElementFinder, Step):
+    """Selects an item inside a dropdown control by its text"""
+
+    def __init__(self, css_path, hint, item_text):
+        super().__init__(css_path, hint)
+
+        self.item_text = item_text
+
+    def run(self, driver):
+        step_result = StepResult(self)
+
+        try:
+            driver.select_drop_down_item_by_text(self.css_path, self.hint, self.item_text)
+        except Exception as exception:
+            step_result.exception = exception
+
+        return step_result
+
+
 class StepResult:
     """Represents the result of the execution of a test step.
 

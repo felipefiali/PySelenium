@@ -8,7 +8,7 @@ def run():
     # Navigates to Selenium's home page
     test.add_step(Navigate('http://www.seleniumhq.org'))
     # Clicks an element if it is found but does not fail if it is not
-    test.add_step(ClickIfFound(css_path='#nonexistent_id', hint='An nonexistent link'))
+    test.add_step(ClickIfFound(css_path='#nonexistent_id', hint='An nonexistent link', wait_time=2))
     # Clicks the download button
     test.add_step(Click(css_path='#sidebar > div.downloadBox > a',
                         hint='Download button'))
@@ -26,7 +26,14 @@ def run():
     # Asserts that an element is not present on the web page
     test.add_step(AssertElementNotPresent(css_path='#some_nonexistent_id', hint='An nonexistent element',
                                           wait_time=3))
-
+    # Sends text to the search input element
+    test.add_step(TypeText(css_path="#q", hint="Search selenium input", text="Searching selenium!"))
+    test.add_step(Navigate("http://www.seleniumhq.org/sponsor/"))
+    # Selects an option inside a select element
+    test.add_step(SelectDropDownItemByText(css_path="#mainContent > form > table > tbody > tr:nth-child(2) >"
+                                                    " td > select",
+                                           hint="Sponsor options",
+                                           item_text="Bronze Sponsor $500.00 USD"))
     test_runner = TestRunner(test)
     test_result = test_runner.run_test()
 

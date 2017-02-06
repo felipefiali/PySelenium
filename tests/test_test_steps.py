@@ -383,3 +383,46 @@ class TestTypeText(TestCase):
             self.assertEqual(step_result.step, type_text)
             self.assertEqual(step_result.exception, exception)
             self.assertFalse(step_result.success)
+
+
+class TestSelectDropDownItemByText(TestCase):
+    """Has unit tests for the SelectDropDownItemByText class"""
+
+    def test_initializer(self):
+        select_item = SelectDropDownItemByText(ANY_CSS_PATH, ANY_HINT, ANY_TEXT)
+
+        self.assertEqual(select_item.css_path, ANY_CSS_PATH)
+        self.assertEqual(select_item.hint, ANY_HINT)
+        self.assertEqual(select_item.item_text, ANY_TEXT)
+
+    def test_run_select_dropdown_item(self):
+        driver_testable = DriverTestable()
+
+        select_item = SelectDropDownItemByText(ANY_CSS_PATH, ANY_HINT, ANY_TEXT)
+
+        with patch.object(driver_testable, 'select_drop_down_item_by_text') as driver_mock:
+            step_result = select_item.run(driver_testable)
+
+            driver_mock.assert_called_with(select_item.css_path, select_item.hint, select_item.item_text)
+
+            self.assertIsNone(step_result.exception)
+            self.assertTrue(step_result.success)
+            self.assertEqual(step_result.step, select_item)
+
+    def test_run_select_dropdown_item_exception(self):
+        exception = Exception()
+
+        driver_testable = DriverTestable()
+
+        select_item = SelectDropDownItemByText(ANY_CSS_PATH, ANY_HINT, ANY_TEXT)
+
+        with patch.object(driver_testable, 'select_drop_down_item_by_text') as driver_mock:
+            driver_mock.side_effect = exception
+
+            step_result = select_item.run(driver_testable)
+
+            driver_mock.assert_called_with(select_item.css_path, select_item.hint, select_item.item_text)
+
+            self.assertEqual(step_result.exception, exception)
+            self.assertFalse(step_result.success)
+            self.assertEqual(step_result.step, select_item)
