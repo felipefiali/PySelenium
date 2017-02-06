@@ -130,6 +130,25 @@ class AssertElementNotPresent(ElementFinder, Step):
         return step_result
 
 
+class TypeText(ElementFinder, Step):
+    """Selects an element and simulates the user typing the specified text in the element"""
+
+    def __init__(self, css_path, hint, text):
+        super().__init__(css_path, hint)
+
+        self.text = text
+
+    def run(self, driver):
+        step_result = StepResult(self)
+
+        try:
+            driver.send_text(self.css_path, self.hint, self.text)
+        except Exception as exception:
+            step_result.exception = exception
+
+        return step_result
+
+
 class StepResult:
     """Represents the result of the execution of a test step.
 

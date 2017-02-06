@@ -5,11 +5,14 @@ from tests.testables import WebElementStub
 from tests.test_data import *
 from _selenium_wrapper import ElementNotFoundError
 from _selenium_wrapper import NoSuchAttributeError
+from _selenium_wrapper import CannotTypeTextError
+from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.expected_conditions import presence_of_element_located
 from mock import patch
 from mock import PropertyMock
+from mock import call
 
 
 class TestDriver(TestCase):
@@ -290,6 +293,40 @@ class TestDriver(TestCase):
         self.assertRaises(ValueError, driver_testable.can_find_element, ANY_CSS_PATH, None)
         self.assertRaises(ValueError, driver_testable.can_find_element, ANY_CSS_PATH, -99)
 
+    def test_send_text(self):
+        element_stub = WebElementStub()
+
+        driver_testable = DriverTestable()
+
+        with patch.object(element_stub, 'send_keys') as send_keys_mock:
+            with patch.object(element_stub, 'clear') as clear_mock:
+                with patch.object(driver_testable, 'find_element', return_value=element_stub) as driver_mock:
+                    send_keys_mock_calls = [call(Keys.NUMPAD1), call(ANY_TEXT)]
+
+                    driver_testable.send_text(ANY_CSS_PATH, ANY_HINT, ANY_TEXT)
+
+                    driver_mock.assert_called_with(ANY_CSS_PATH, ANY_HINT)
+                    send_keys_mock.assert_has_calls(send_keys_mock_calls)
+
+                    self.assertTrue(clear_mock.called)
+
+    def test_send_text_exception(self):
+        exception_to_be_thrown = Exception()
+
+        element_stub = WebElementStub()
+
+        driver_testable = DriverTestable()
+
+        with patch.object(element_stub, 'send_keys', side_effect=exception_to_be_thrown):
+            with patch.object(driver_testable, 'find_element', return_value=element_stub) as driver_mock:
+                try:
+                    driver_testable.send_text(ANY_CSS_PATH, ANY_HINT, ANY_TEXT)
+                except CannotTypeTextError as exception:
+                    self.assertEqual(exception.css_path, ANY_CSS_PATH)
+                    self.assertEqual(exception.hint, ANY_HINT)
+                    self.assertEqual(exception.text, ANY_TEXT)
+                    self.assertEqual(exception.inner_exception, exception_to_be_thrown)
+
 
 class TestElementNotFoundError(TestCase):
     """Has unit tests for the ElementNotFoundError class"""
@@ -321,3 +358,17 @@ class TestNoSuchAttributeError(TestCase):
         self.assertEqual(exception.hint, any_hint)
         self.assertEqual(exception.inner_exception, any_exception)
         self.assertEqual(exception.attribute_name, any_attribute_name)
+
+
+class TestCannotTypeTextError(TestCase):
+    """Has unit tests for the CannotTypeTextError class"""
+
+    def test_initializer(self):
+        exception = Exception()
+
+        cannot_type_text = CannotTypeTextError(ANY_CSS_PATH, ANY_HINT, ANY_TEXT, exception)
+
+        self.assertEqual(cannot_type_text.css_path, ANY_CSS_PATH)
+        self.assertEqual(cannot_type_text.hint, ANY_HINT)
+        self.assertEqual(cannot_type_text.text, ANY_TEXT)
+        self.assertEqual(cannot_type_text.inner_exception, exception)

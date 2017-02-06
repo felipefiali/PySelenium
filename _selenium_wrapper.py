@@ -1,4 +1,5 @@
 from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions
@@ -35,6 +36,22 @@ class NoSuchAttributeError(Exception):
         self.css_path = css_path
         self.hint = hint
         self.attribute_name = attribute_name
+        self.inner_exception = exception
+
+
+class CannotTypeTextError(Exception):
+    """Exception raised when the web element is found but the typing of the text fails for some reason
+
+    Attributes:
+        css_path - The CSS path of the element
+        hint - The element hint
+        text - The text to be typed on the element
+    """
+
+    def __init__(self, css_path, hint, text, exception):
+        self.css_path = css_path
+        self.hint = hint
+        self.text = text
         self.inner_exception = exception
 
 
@@ -160,6 +177,21 @@ class Driver:
             return False
         else:
             return True
+
+    def send_text(self, css_path, hint, text):
+        """Finds an element and sends the specified text to it as if the user typed it.
+        Raises errors if the element can not be found."""
+
+        element = self.find_element(css_path, hint)
+
+        try:
+            # We do the following to trigger any JS events on the element before sending the actual text:
+            element.send_keys(Keys.NUMPAD1)
+            element.clear()
+
+            element.send_keys(text)
+        except Exception as exception:
+            raise CannotTypeTextError(css_path, hint, text, exception)
 
     def _find_element_with_timeout(self, css_path, hint, timeout):
         try:

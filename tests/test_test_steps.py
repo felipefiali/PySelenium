@@ -340,3 +340,46 @@ class TestAssertElementNotPresent(TestCase):
             self.assertEqual(step_result.exception, exception)
             self.assertEqual(step_result.step, assert_element_not_present)
             self.assertFalse(step_result.success)
+
+
+class TestTypeText(TestCase):
+    """Has unit tests for the TypeText class"""
+
+    def test_initializer(self):
+        type_text = TypeText(ANY_CSS_PATH, ANY_HINT, ANY_TEXT)
+
+        self.assertEqual(type_text.css_path, ANY_CSS_PATH)
+        self.assertEqual(type_text.hint, ANY_HINT)
+        self.assertEqual(type_text.text, ANY_TEXT)
+
+    def test_run_type_text(self):
+        driver_testable = DriverTestable()
+
+        type_text = TypeText(ANY_CSS_PATH, ANY_HINT, ANY_TEXT)
+
+        with patch.object(driver_testable, 'send_text') as driver_mock:
+            step_result = type_text.run(driver_testable)
+
+            driver_mock.assert_called_with(type_text.css_path, type_text.hint, type_text.text)
+
+            self.assertEqual(step_result.step, type_text)
+            self.assertIsNone(step_result.exception)
+            self.assertTrue(step_result.success)
+
+    def test_run_type_text_exception(self):
+        driver_testable = DriverTestable()
+
+        type_text = TypeText(ANY_CSS_PATH, ANY_HINT, ANY_TEXT)
+
+        with patch.object(driver_testable, 'send_text') as driver_mock:
+            exception = Exception()
+
+            driver_mock.side_effect = exception
+
+            step_result = type_text.run(driver_testable)
+
+            driver_mock.assert_called_with(type_text.css_path, type_text.hint, type_text.text)
+
+            self.assertEqual(step_result.step, type_text)
+            self.assertEqual(step_result.exception, exception)
+            self.assertFalse(step_result.success)

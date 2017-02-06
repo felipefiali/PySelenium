@@ -8,6 +8,7 @@ ANY_HINT = 'any hint'
 ANY_URL = 'any url'
 ANY_ATTRIBUTE_NAME = 'any attribute name'
 ANY_VALUE = 'foo bar'
+ANY_TEXT = ANY_VALUE
 ANY_OTHER_VALUE = ANY_URL
 ANY_WAIT_TIME = 1
 

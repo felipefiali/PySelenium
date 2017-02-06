@@ -26,6 +26,12 @@ class WebElementStub:
     def click(self):
         pass
 
+    def clear(self):
+        pass
+
+    def send_keys(self):
+        pass
+
     def is_enabled(self):
         return True
 
