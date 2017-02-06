@@ -217,6 +217,9 @@ class Driver:
         """Finds an element and sends the specified text to it as if the user typed it.
         Raises errors if the element can not be found."""
 
+        if text is None or text == '':
+            raise ValueError('text')
+
         element = self.find_element(css_path, hint)
 
         try:

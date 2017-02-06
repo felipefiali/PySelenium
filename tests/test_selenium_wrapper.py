@@ -325,6 +325,15 @@ class TestDriver(TestCase):
                     self.assertEqual(exception.text, ANY_TEXT)
                     self.assertEqual(exception.inner_exception, exception_to_be_thrown)
 
+    def test_send_text_empty_text(self):
+        driver_testable = DriverTestable()
+
+        self.assertRaises(ValueError, driver_testable.send_text, ANY_CSS_PATH, ANY_HINT, '')
+        self.assertRaises(ValueError, driver_testable.send_text, ANY_CSS_PATH, ANY_HINT, None)
+
+        self.assertRaises(ValueError, driver_testable.send_text, '', ANY_HINT, ANY_TEXT)
+        self.assertRaises(ValueError, driver_testable.send_text, None, ANY_HINT, ANY_TEXT)
+
     def test_select_drop_down_item_by_text(self):
         driver_testable = DriverTestable()
 
