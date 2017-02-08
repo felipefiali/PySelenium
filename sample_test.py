@@ -34,16 +34,19 @@ def run():
                                                     ' td > select',
                                            hint='Sponsor options',
                                            item_text='Bronze Sponsor $500.00 USD'))
-    test.add_step(Navigate('http://html.com/input-type-checkbox/'))
+    test.add_step(Navigate('http://www.w3schools.com/html/tryit.asp?filename=tryhtml_checkbox'))
+    # Switches to an iFrame on the page
+    test.add_step(SwitchFrame(css_path='#tryhome > a',
+                              hint='Result iFrame'))
     # Checks and unchecks a checkbox on the page
-    test.add_step(SetCheckbox(css_path='#HTML',
-                              hint='HTML checkbox',
+    test.add_step(SetCheckbox(css_path='body > form > input[type="checkbox"]:nth-child(1)',
+                              hint='I have a bike',
                               checked=True))
-    test.add_step(SetCheckbox(css_path='#CSS',
-                              hint='CSS checkbox',
+    test.add_step(SetCheckbox(css_path='body > form > input[type="checkbox"]:nth-child(3)',
+                              hint='I have a car',
                               checked=False))
-    test.add_step(SetCheckbox(css_path='#HTML',
-                              hint='HTML checkbox',
+    test.add_step(SetCheckbox(css_path='body > form > input[type="checkbox"]:nth-child(1)',
+                              hint='I have a bike',
                               checked=False))
     test_runner = TestRunner(test)
     test_result = test_runner.run_test()

@@ -2,6 +2,7 @@ from unittest import TestCase
 from tests.testables import DriverTestable
 from tests.testables import WebDriverWaitTestable
 from tests.testables import WebElementStub
+from tests.testables import SwitchToStub
 from tests.test_data import *
 from _selenium_wrapper import *
 from selenium.webdriver.common.keys import Keys
@@ -445,6 +446,51 @@ class TestDriver(TestCase):
         self.assertRaises(ValueError, driver_testable.set_checkbox, '', ANY_HINT, True)
         self.assertRaises(ValueError, driver_testable.set_checkbox, None, ANY_HINT, True)
         self.assertRaises(ValueError, driver_testable.set_checkbox, ANY_CSS_PATH, ANY_HINT, None)
+
+    def test_switch_frame(self):
+        driver_testable = DriverTestable()
+        switch_to = SwitchToStub()
+
+        driver_testable.driver.inject_switch_to(switch_to)
+
+        element_stub = WebElementStub()
+
+        with patch.object(driver_testable, 'find_element', return_value=element_stub) as find_element_mock, \
+                patch.object(switch_to, 'frame') as frame_mock:
+            driver_testable.switch_to_frame(ANY_CSS_PATH, ANY_HINT)
+
+            find_element_mock.assert_called_with(ANY_CSS_PATH, ANY_HINT)
+            frame_mock.assert_called_with(element_stub)
+
+    def test_switch_frame_exception(self):
+        driver_testable = DriverTestable()
+        switch_to = SwitchToStub()
+
+        driver_testable.driver.inject_switch_to(switch_to)
+
+        element_stub = WebElementStub()
+
+        no_such_frame_exception = NoSuchFrameException()
+
+        with patch.object(driver_testable, 'find_element', return_value=element_stub) as find_element_mock, \
+                patch.object(switch_to, 'frame') as frame_mock:
+            frame_mock.side_effect = no_such_frame_exception
+
+            try:
+                driver_testable.switch_to_frame(ANY_CSS_PATH, ANY_HINT)
+            except InvalidElementException as exception:
+                self.assertEqual(exception.css_path, ANY_CSS_PATH)
+                self.assertEqual(exception.hint, ANY_HINT)
+                self.assertEqual(exception.inner_exception, no_such_frame_exception)
+
+                find_element_mock.assert_called_with(ANY_CSS_PATH, ANY_HINT)
+                frame_mock.assert_called_with(element_stub)
+
+    def test_switch_frame_empty_args(self):
+        driver_testable = DriverTestable()
+
+        self.assertRaises(ValueError, driver_testable.switch_to_frame, None, ANY_HINT)
+        self.assertRaises(ValueError, driver_testable.switch_to_frame, '', ANY_HINT)
 
 
 class TestElementNotFoundError(TestCase):

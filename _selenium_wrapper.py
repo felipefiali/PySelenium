@@ -7,6 +7,7 @@ from selenium.webdriver.support import expected_conditions
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import TimeoutException
 from selenium.common.exceptions import UnexpectedTagNameException
+from selenium.common.exceptions import NoSuchFrameException
 
 
 class ElementNotFoundError(Exception):
@@ -261,6 +262,20 @@ class Driver:
 
         if element.is_selected() != checked:
             element.click()
+
+    def switch_to_frame(self, css_path, hint):
+        """Switches the context of the web driver to the frame at the specified CSS path.
+        Raises errors if the frame can not be found."""
+
+        if css_path is None or css_path == '':
+            raise ValueError('css_path')
+
+        frame = self.find_element(css_path, hint)
+
+        try:
+            self.driver.switch_to.frame(frame)
+        except NoSuchFrameException as exception:
+            raise InvalidElementException(css_path, hint, exception)
 
     def _find_element_with_timeout(self, css_path, hint, timeout):
         try:

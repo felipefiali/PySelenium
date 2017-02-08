@@ -465,3 +465,45 @@ class TestSetCheckbox(TestCase):
             self.assertEqual(step_result.step, set_checkbox)
             self.assertFalse(step_result.success)
             self.assertEqual(step_result.exception, exception)
+
+
+class TestSwitchFrame(TestCase):
+    """Has unit tests for the SwitchFrame class"""
+
+    def test_initializer(self):
+        switch_frame = SwitchFrame(ANY_CSS_PATH, ANY_HINT)
+
+        self.assertEqual(switch_frame.css_path, ANY_CSS_PATH)
+        self.assertEqual(switch_frame.hint, ANY_HINT)
+
+    def test_run(self):
+        driver_testable = DriverTestable()
+
+        switch_frame = SwitchFrame(ANY_CSS_PATH, ANY_HINT)
+
+        with patch.object(driver_testable, 'switch_to_frame') as switch_mock:
+            step_result = switch_frame.run(driver_testable)
+
+            switch_mock.assert_called_with(switch_frame.css_path, switch_frame.hint)
+
+            self.assertEqual(step_result.step, switch_frame)
+            self.assertIsNone(step_result.exception)
+            self.assertTrue(step_result.success)
+
+    def test_run_exception(self):
+        driver_testable = DriverTestable()
+
+        switch_frame = SwitchFrame(ANY_CSS_PATH, ANY_HINT)
+
+        exception = Exception()
+
+        with patch.object(driver_testable, 'switch_to_frame') as switch_mock:
+            switch_mock.side_effect = exception
+
+            step_result = switch_frame.run(driver_testable)
+
+            switch_mock.assert_called_with(switch_frame.css_path, switch_frame.hint)
+
+            self.assertEqual(step_result.step, switch_frame)
+            self.assertEqual(step_result.exception, exception)
+            self.assertFalse(step_result.success)

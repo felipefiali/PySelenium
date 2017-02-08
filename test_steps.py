@@ -187,6 +187,23 @@ class SetCheckbox(ElementFinder, Step):
         return step_result
 
 
+class SwitchFrame(ElementFinder, Step):
+    """"Switches the context of the web driver to the iFrame found at the specified CSS path"""
+
+    def __init__(self, css_path, hint):
+        super().__init__(css_path, hint)
+
+    def run(self, driver):
+        step_result = StepResult(self)
+
+        try:
+            driver.switch_to_frame(self.css_path, self.hint)
+        except Exception as exception:
+            step_result.exception = exception
+
+        return step_result
+
+
 class StepResult:
     """Represents the result of the execution of a test step.
 

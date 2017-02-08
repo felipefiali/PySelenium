@@ -7,6 +7,9 @@ from test_runner import TestRunner
 class DriverStub:
     """A stub of Selenium's Driver class to enable unit testing of the wrapper class"""
 
+    def __init__(self):
+        self._switch_to = SwitchToStub()
+
     def get(self, url):
         pass
 
@@ -14,6 +17,24 @@ class DriverStub:
         pass
 
     def maximize_window(self):
+        pass
+
+    @property
+    def switch_to(self):
+        return self._switch_to
+
+    @switch_to.setter
+    def switch_to(self, value):
+        self._switch_to = value
+
+    def inject_switch_to(self, switch_to):
+        self.switch_to = switch_to
+
+
+class SwitchToStub:
+    """A stub of Selenium's SwitchTo class to enable unit testing of the wrapper class"""
+
+    def frame(self, frame):
         pass
 
 
