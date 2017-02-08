@@ -407,6 +407,45 @@ class TestDriver(TestCase):
         self.assertRaises(ValueError, driver_testable.select_drop_down_item_by_text, None, ANY_HINT, ANY_TEXT)
         self.assertRaises(ValueError, driver_testable.select_drop_down_item_by_text, '', ANY_HINT, ANY_TEXT)
 
+    def test_set_checkbox_should_click(self):
+        element_stub = WebElementStub()
+
+        driver_testable = DriverTestable()
+
+        checked = True
+
+        with patch.object(driver_testable, 'find_element', return_value=element_stub) as driver_mock, \
+                patch.object(element_stub, 'is_selected', return_value=not checked) as is_selected_mock, \
+                patch.object(element_stub, 'click') as click_mock:
+            driver_testable.set_checkbox(ANY_CSS_PATH, ANY_HINT, checked)
+
+            driver_mock.assert_called_with(ANY_CSS_PATH, ANY_HINT)
+            self.assertTrue(is_selected_mock.called)
+            self.assertTrue(click_mock.called)
+
+    def test_set_checkbox_should_not_click(self):
+        element_stub = WebElementStub()
+
+        driver_testable = DriverTestable()
+
+        checked = True
+
+        with patch.object(driver_testable, 'find_element', return_value=element_stub) as driver_mock, \
+                patch.object(element_stub, 'is_selected', return_value=checked) as is_selected_mock, \
+                patch.object(element_stub, 'click') as click_mock:
+            driver_testable.set_checkbox(ANY_CSS_PATH, ANY_HINT, checked)
+
+            driver_mock.assert_called_with(ANY_CSS_PATH, ANY_HINT)
+            self.assertTrue(is_selected_mock.called)
+            self.assertFalse(click_mock.called)
+
+    def test_set_checkbox_throws_error(self):
+        driver_testable = DriverTestable()
+
+        self.assertRaises(ValueError, driver_testable.set_checkbox, '', ANY_HINT, True)
+        self.assertRaises(ValueError, driver_testable.set_checkbox, None, ANY_HINT, True)
+        self.assertRaises(ValueError, driver_testable.set_checkbox, ANY_CSS_PATH, ANY_HINT, None)
+
 
 class TestElementNotFoundError(TestCase):
     """Has unit tests for the ElementNotFoundError class"""

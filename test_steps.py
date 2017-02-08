@@ -168,6 +168,25 @@ class SelectDropDownItemByText(ElementFinder, Step):
         return step_result
 
 
+class SetCheckbox(ElementFinder, Step):
+    """Checks or unchecks a checkbox web element"""
+
+    def __init__(self, css_path, hint, checked):
+        super().__init__(css_path, hint)
+
+        self.checked = checked
+
+    def run(self, driver):
+        step_result = StepResult(self)
+
+        try:
+            driver.set_checkbox(self.css_path, self.hint, self.checked)
+        except Exception as exception:
+            step_result.exception = exception
+
+        return step_result
+
+
 class StepResult:
     """Represents the result of the execution of a test step.
 

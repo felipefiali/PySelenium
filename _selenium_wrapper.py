@@ -233,7 +233,7 @@ class Driver:
 
     def select_drop_down_item_by_text(self, css_path, hint, item_text):
         """Finds a Select element and selects an item by its text.
-        Raises errors if the element can not be found or if it' not a Select web element."""
+        Raises errors if the element can not be found or if it is not a Select web element."""
 
         if item_text is None or item_text == '':
             raise ValueError('item_text')
@@ -246,6 +246,21 @@ class Driver:
             raise InvalidElementException(css_path, hint, unexpected_tag_ex)
         except NoSuchElementException as invalid_item_text:
             raise InvalidOptionTextException(css_path, hint, item_text, invalid_item_text)
+
+    def set_checkbox(self, css_path, hint, checked):
+        """Finds a checkbox element and checks or unchecks it by clicking on it.
+        Raises errors if the element can not be found."""
+
+        if css_path is None or css_path == '':
+            raise ValueError('css_path')
+
+        if checked is None:
+            raise ValueError('checked')
+
+        element = self.find_element(css_path, hint)
+
+        if element.is_selected() != checked:
+            element.click()
 
     def _find_element_with_timeout(self, css_path, hint, timeout):
         try:

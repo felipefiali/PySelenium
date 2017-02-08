@@ -426,3 +426,42 @@ class TestSelectDropDownItemByText(TestCase):
             self.assertEqual(step_result.exception, exception)
             self.assertFalse(step_result.success)
             self.assertEqual(step_result.step, select_item)
+
+
+class TestSetCheckbox(TestCase):
+    """Has unit tests for the set checkbox class"""
+
+    def test_initializer(self):
+        set_checkbox = SetCheckbox(ANY_CSS_PATH, ANY_HINT, True)
+
+        self.assertEqual(set_checkbox.css_path, ANY_CSS_PATH)
+        self.assertEqual(set_checkbox.hint, ANY_HINT)
+        self.assertEqual(set_checkbox.checked, True)
+
+    def test_run_set_checkbox(self):
+        driver_testable = DriverTestable()
+        set_checkbox = SetCheckbox(ANY_CSS_PATH, ANY_HINT, True)
+
+        with patch.object(driver_testable, 'set_checkbox') as driver_mock:
+            step_result = set_checkbox.run(driver_testable)
+
+            driver_mock.assert_called_with(set_checkbox.css_path, set_checkbox.hint, set_checkbox.checked)
+
+            self.assertEqual(step_result.step, set_checkbox)
+            self.assertTrue(step_result.success)
+            self.assertIsNone(step_result.exception)
+
+    def test_run_set_checkbox_exception(self):
+        driver_testable = DriverTestable()
+        set_checkbox = SetCheckbox(ANY_CSS_PATH, ANY_HINT, True)
+
+        with patch.object(driver_testable, 'set_checkbox') as driver_mock:
+            exception = Exception()
+
+            driver_mock.side_effect = exception
+
+            step_result = set_checkbox.run(driver_testable)
+
+            self.assertEqual(step_result.step, set_checkbox)
+            self.assertFalse(step_result.success)
+            self.assertEqual(step_result.exception, exception)

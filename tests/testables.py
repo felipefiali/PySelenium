@@ -32,6 +32,9 @@ class WebElementStub:
     def send_keys(self):
         pass
 
+    def is_selected(self):
+        pass
+
     def is_enabled(self):
         return True
 
