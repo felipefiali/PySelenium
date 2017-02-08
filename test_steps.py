@@ -204,6 +204,20 @@ class SwitchFrame(ElementFinder, Step):
         return step_result
 
 
+class SwitchToDefaultContent(Step):
+    """Switches the context of the web driver back to the default content of the web page"""
+
+    def run(self, driver):
+        step_result = StepResult(self)
+
+        try:
+            driver.switch_to_default_content()
+        except Exception as exception:
+            step_result.exception = exception
+
+        return step_result
+
+
 class StepResult:
     """Represents the result of the execution of a test step.
 

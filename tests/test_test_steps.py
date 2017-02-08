@@ -507,3 +507,37 @@ class TestSwitchFrame(TestCase):
             self.assertEqual(step_result.step, switch_frame)
             self.assertEqual(step_result.exception, exception)
             self.assertFalse(step_result.success)
+
+
+class TestSwitchToDefaultContent(TestCase):
+    """Has unit tests for the SwitchToDefaultContent class"""
+
+    def test_run(self):
+        switch_default = SwitchToDefaultContent()
+
+        driver_testable = DriverTestable()
+
+        with patch.object(driver_testable, 'switch_to_default_content') as driver_mock:
+            step_result = switch_default.run(driver_testable)
+
+            self.assertTrue(driver_mock.called)
+            self.assertTrue(step_result.success)
+            self.assertEqual(step_result.step, switch_default)
+            self.assertIsNone(step_result.exception)
+
+    def test_run_with_exception(self):
+        switch_default = SwitchToDefaultContent()
+
+        exception = Exception()
+
+        driver_testable = DriverTestable()
+
+        with patch.object(driver_testable, 'switch_to_default_content') as driver_mock:
+            driver_mock.side_effect = exception
+
+            step_result = switch_default.run(driver_testable)
+
+            self.assertTrue(driver_mock.called)
+            self.assertFalse(step_result.success)
+            self.assertEqual(step_result.step, switch_default)
+            self.assertEqual(step_result.exception, exception)

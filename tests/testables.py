@@ -37,6 +37,8 @@ class SwitchToStub:
     def frame(self, frame):
         pass
 
+    def default_content(self):
+        pass
 
 class WebElementStub:
     """"A stub that allows unit testing of interactions with web elements"""

@@ -492,6 +492,17 @@ class TestDriver(TestCase):
         self.assertRaises(ValueError, driver_testable.switch_to_frame, None, ANY_HINT)
         self.assertRaises(ValueError, driver_testable.switch_to_frame, '', ANY_HINT)
 
+    def test_switch_to_default_frame(self):
+        driver_testable = DriverTestable()
+        switch_to = SwitchToStub()
+
+        driver_testable.driver.inject_switch_to(switch_to)
+
+        with patch.object(switch_to, 'default_content') as frame_mock:
+            driver_testable.switch_to_default_content()
+
+            self.assertTrue(frame_mock.called)
+
 
 class TestElementNotFoundError(TestCase):
     """Has unit tests for the ElementNotFoundError class"""

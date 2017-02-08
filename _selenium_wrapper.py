@@ -277,6 +277,11 @@ class Driver:
         except NoSuchFrameException as exception:
             raise InvalidElementException(css_path, hint, exception)
 
+    def switch_to_default_content(self):
+        """Switches the context of the web driver to the default content of the page."""
+
+        self.driver.switch_to.default_content()
+
     def _find_element_with_timeout(self, css_path, hint, timeout):
         try:
             element = self._get_web_driver_wait(self.driver, timeout).until(
