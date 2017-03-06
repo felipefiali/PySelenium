@@ -1,0 +1,1 @@
+PySelenium is a wrapper package for Selenium which allows developers to easily program automated tests for the web.

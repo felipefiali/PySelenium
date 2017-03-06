@@ -1,7 +1,8 @@
-from _selenium_wrapper import Driver
-from selenium.webdriver.support.ui import WebDriverWait
+from pyselenium._selenium_wrapper import Driver
 from selenium.webdriver.support import expected_conditions
-from test_runner import TestRunner
+from selenium.webdriver.support.ui import WebDriverWait
+
+from pyselenium.test_runner import TestRunner
 
 
 class DriverStub:
@@ -40,6 +41,7 @@ class SwitchToStub:
     def default_content(self):
         pass
 
+
 class WebElementStub:
     """"A stub that allows unit testing of interactions with web elements"""
 
@@ -68,6 +70,16 @@ class WebElementStub:
         pass
 
 
+class ActionChainsStub:
+    """A stub that allows unit testing of action chaining in the web driver"""
+
+    def send_keys(self, keys):
+        pass
+
+    def perform(self):
+        pass
+
+
 class DriverTestable(Driver):
     """A testable version of the Driver class which doesn't actually interact with Selenium"""
 
@@ -76,6 +88,7 @@ class DriverTestable(Driver):
         self.driver = DriverStub()
         self.web_driver_wait_testable = WebDriverWaitTestable()
         self.presence_of_element_located = expected_conditions.presence_of_element_located(None)
+        self.action_chains = ActionChainsStub()
 
     def _get_web_driver(self):
         return self.driver
@@ -94,6 +107,12 @@ class DriverTestable(Driver):
 
     def _get_select(self, web_element):
         return web_element
+
+    def _get_action_chains(self):
+        return self.action_chains
+
+    def inject_action_chains(self, action_chains):
+        self.action_chains = action_chains
 
 
 class WebDriverWaitTestable(WebDriverWait):

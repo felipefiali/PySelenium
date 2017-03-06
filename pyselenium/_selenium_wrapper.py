@@ -4,6 +4,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions
+from selenium.webdriver import ActionChains
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import TimeoutException
 from selenium.common.exceptions import UnexpectedTagNameException
@@ -81,13 +82,24 @@ class InvalidOptionTextException(Exception):
         css_path -- The CSS path of the element
         hint -- The element hint
         option_text -- The invalid specified option text
-        inner_exception -- The exception that may have been thrown by the web druver, None otherwise
+        inner_exception -- The exception that may have been thrown by the web driver, None otherwise
     """
 
     def __init__(self, css_path, hint, option_text, exception):
         self.css_path = css_path
         self.hint = hint
         self.option_text = option_text
+        self.inner_exception = exception
+
+
+class UnknownErrorException(Exception):
+    """Exception raised when an unknown error occurs in Selenium Web Driver.
+
+    Attributes:
+        inner_exception -- The exception that has been thrown by the web driver
+    """
+
+    def __init__(self, exception):
         self.inner_exception = exception
 
 
@@ -232,6 +244,14 @@ class Driver:
         except Exception as exception:
             raise CannotTypeTextError(css_path, hint, text, exception)
 
+    def send_enter_key(self):
+        """Sends the enter key to the page as if the user had pressed the return button on the keyboard."""
+
+        try:
+            self._get_action_chains().send_keys(Keys.RETURN).perform()
+        except Exception as exception:
+            raise UnknownErrorException(exception)
+
     def select_drop_down_item_by_text(self, css_path, hint, item_text):
         """Finds a Select element and selects an item by its text.
         Raises errors if the element can not be found or if it is not a Select web element."""
@@ -303,3 +323,7 @@ class Driver:
 
     def _get_select(self, web_element):
         return Select(web_element)
+
+    def _get_action_chains(self):
+        return ActionChains(self.driver)
+

@@ -1,5 +1,6 @@
 from unittest import TestCase
-from test_metadata import Test
+
+from pyselenium.test_metadata import Test
 from tests.test_data import any_click
 
 

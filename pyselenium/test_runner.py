@@ -1,4 +1,4 @@
-from _selenium_wrapper import Driver
+from pyselenium._selenium_wrapper import Driver
 
 
 class TestResult:

@@ -1,5 +1,5 @@
-from test_metadata import ElementFinder
-from test_metadata import Step
+from pyselenium.test_metadata import ElementFinder
+from pyselenium.test_metadata import Step
 
 
 class Click(ElementFinder, Step):
@@ -143,6 +143,23 @@ class TypeText(ElementFinder, Step):
 
         try:
             driver.send_text(self.css_path, self.hint, self.text)
+        except Exception as exception:
+            step_result.exception = exception
+
+        return step_result
+
+
+class SendEnter(Step):
+    """Sends the enter key to simulate the user hitting the return button on the keyboard"""
+
+    def __init__(self):
+        super().__init__()
+
+    def run(self, driver):
+        step_result = StepResult(self)
+
+        try:
+            driver.send_enter_key()
         except Exception as exception:
             step_result.exception = exception
 

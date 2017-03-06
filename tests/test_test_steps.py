@@ -1,8 +1,10 @@
 from unittest import TestCase
-from tests.testables import DriverTestable
-from tests.test_data import *
-from test_steps import *
+
 from mock import patch
+
+from pyselenium.test_steps import *
+from tests.test_data import *
+from tests.testables import DriverTestable
 
 
 class TestStepResult(TestCase):
@@ -381,6 +383,42 @@ class TestTypeText(TestCase):
             driver_mock.assert_called_with(type_text.css_path, type_text.hint, type_text.text)
 
             self.assertEqual(step_result.step, type_text)
+            self.assertEqual(step_result.exception, exception)
+            self.assertFalse(step_result.success)
+
+
+class TestSendEnter(TestCase):
+    """Has unit tests for the SendEnter class"""
+
+    def test_run_send_enter(self):
+        driver_testable = DriverTestable()
+
+        send_enter = SendEnter()
+
+        with patch.object(driver_testable, 'send_enter_key') as driver_mock:
+            step_result = send_enter.run(driver_testable)
+
+            self.assertTrue(driver_mock.called)
+
+            self.assertEqual(step_result.step, send_enter)
+            self.assertIsNone(step_result.exception)
+            self.assertTrue(step_result.success)
+
+    def test_run_send_enter_exception(self):
+        exception = Exception()
+
+        driver_testable = DriverTestable()
+
+        send_enter = SendEnter()
+
+        with patch.object(driver_testable, 'send_enter_key') as driver_mock:
+            driver_mock.side_effect = exception
+
+            step_result = send_enter.run(driver_testable)
+
+            self.assertTrue(driver_mock.called)
+
+            self.assertEqual(step_result.step, send_enter)
             self.assertEqual(step_result.exception, exception)
             self.assertFalse(step_result.success)
 

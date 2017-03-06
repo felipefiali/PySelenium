@@ -1,14 +1,16 @@
 from unittest import TestCase
-from tests.testables import TestRunnerTestable
-from tests.testables import DriverTestable
+
+from mock import patch
+from pyselenium.test_metadata import Test
+from pyselenium.test_steps import Step
+from pyselenium.test_steps import StepResult
+
+from pyselenium.test_runner import TestResult
+from pyselenium.test_runner import TestRunner
 from tests.test_data import any_click
 from tests.test_data import any_navigate
-from test_runner import TestResult
-from test_runner import TestRunner
-from test_metadata import Test
-from test_steps import StepResult
-from test_steps import Step
-from mock import patch
+from tests.testables import DriverTestable
+from tests.testables import TestRunnerTestable
 
 
 class TestTestResult(TestCase):

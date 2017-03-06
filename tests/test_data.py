@@ -1,7 +1,6 @@
-from test_steps import Click
-from test_steps import Navigate
-from test_steps import AssertElementAttributeValue
-
+from pyselenium.test_steps import AssertElementAttributeValue
+from pyselenium.test_steps import Click
+from pyselenium.test_steps import Navigate
 
 ANY_CSS_PATH = 'any css path'
 ANY_HINT = 'any hint'

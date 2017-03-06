@@ -1,17 +1,17 @@
 from unittest import TestCase
-from tests.testables import DriverTestable
-from tests.testables import WebDriverWaitTestable
-from tests.testables import WebElementStub
-from tests.testables import SwitchToStub
-from tests.test_data import *
-from _selenium_wrapper import *
-from selenium.webdriver.common.keys import Keys
-from selenium.common.exceptions import NoSuchElementException
-from selenium.common.exceptions import TimeoutException
-from selenium.webdriver.support.expected_conditions import presence_of_element_located
-from mock import patch
+
 from mock import PropertyMock
 from mock import call
+from mock import patch
+from selenium.webdriver.support.expected_conditions import presence_of_element_located
+
+from pyselenium._selenium_wrapper import *
+from tests.test_data import *
+from tests.testables import DriverTestable
+from tests.testables import SwitchToStub
+from tests.testables import WebDriverWaitTestable
+from tests.testables import WebElementStub
+from tests.testables import ActionChainsStub
 
 
 class TestDriver(TestCase):
@@ -503,6 +503,39 @@ class TestDriver(TestCase):
 
             self.assertTrue(frame_mock.called)
 
+    def test_send_enter_key(self):
+        driver_testable = DriverTestable()
+        action_chains = ActionChainsStub()
+
+        with patch.object(action_chains, 'send_keys', return_value=action_chains) as send_keys_mock, \
+                patch.object(action_chains, 'perform') as perform_mock:
+            driver_testable.inject_action_chains(action_chains)
+
+            driver_testable.send_enter_key()
+
+            self.assertTrue(send_keys_mock.called)
+            self.assertTrue(perform_mock.called)
+
+    def test_send_enter_key(self):
+        exception = Exception()
+
+        driver_testable = DriverTestable()
+        action_chains = ActionChainsStub()
+
+        with patch.object(action_chains, 'send_keys', return_value=action_chains) as send_keys_mock, \
+                patch.object(action_chains, 'perform') as perform_mock:
+            driver_testable.inject_action_chains(action_chains)
+
+            perform_mock.side_effect = exception
+
+            try:
+                driver_testable.send_enter_key()
+            except UnknownErrorException as exception_caught:
+                self.assertTrue(send_keys_mock.called)
+                self.assertTrue(perform_mock.called)
+
+                self.assertEqual(exception_caught.inner_exception, exception)
+
 
 class TestElementNotFoundError(TestCase):
     """Has unit tests for the ElementNotFoundError class"""
@@ -576,3 +609,13 @@ class TestInvalidOptionTextException(TestCase):
         self.assertEqual(invalid_option.option_text, ANY_TEXT)
         self.assertEqual(invalid_option.inner_exception, exception)
 
+
+class TestUnknownErrorException(TestCase):
+    """Has unit tests for the UnknownErrorException class"""
+
+    def test_initializer(self):
+        exception = Exception()
+
+        unknown_exception = UnknownErrorException(exception)
+
+        self.assertEqual(unknown_exception.inner_exception, exception)
