@@ -26,7 +26,7 @@ print(test_result)
 
 ## Sample test
 
-You can find a sample test in [pyselenium/sample_test.py](https://github.com/felipefiali/PySelenium/pyselenium/sample_test.py)
+You can find a sample test in [pyselenium/sample_test.py](https://github.com/felipefiali/PySelenium/blob/master/pyselenium/sample_test.py)
 
 ## List of available test steps
 
