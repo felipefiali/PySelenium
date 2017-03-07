@@ -1,5 +1,6 @@
 [![Travis CI Build Status](https://travis-ci.org/felipefiali/PySelenium.svg?branch=master)](https://travis-ci.org/felipefiali/PySelenium)
 [![Coverage Status](https://coveralls.io/repos/github/felipefiali/PySelenium/badge.svg)](https://coveralls.io/github/felipefiali/PySelenium)
+[![PyPI version](https://badge.fury.io/py/PySelenium.svg)](https://badge.fury.io/py/PySelenium)
 [![License](https://img.shields.io/github/license/felipefiali/pyselenium.svg)](./LICENSE)
 
 # PySelenium 
