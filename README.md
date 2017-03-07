@@ -76,6 +76,6 @@ Switches the context to a given iFrame on the page. Fails if the iFrame is not f
 
 Switches the context to the default content of the web page. Should always be called after switching the context to another iFrame and running the needed steps on that iFrame.
 
-### SendEnder
+### SendEnter
 
 Sends an ENTER key to the webpage. It's the same as if the user simply hit the return button on the keyboard. This step doesn't have any context information as to there the focus is on the page, so should only be used when necessary.
