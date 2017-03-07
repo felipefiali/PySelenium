@@ -14,6 +14,10 @@ A Python package that uses Selenium to enable for automating tests for web appli
 After successfully going through the setup instructions, you can start programming your tests like so:
 
 ```python
+from pyselenium.test_metadata import Test
+from pyselenium.test_steps import *
+from pyselenium.test_runner import *
+
 test = Test('My test')
 test.add_step(Navigate('http://www.google.com'))
 test.add_step(TypeText(css_path='#lst-ib', hint='Google search bar', text='Automating a Google search'))
