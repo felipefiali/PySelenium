@@ -1,11 +1,15 @@
-# PySelenium [![Travis CI Build Status](https://travis-ci.org/felipefiali/PySelenium.svg?branch=master)](https://travis-ci.org/felipefiali/PySelenium) [![Coverage Status](https://coveralls.io/repos/github/felipefiali/PySelenium/badge.svg)](https://coveralls.io/github/felipefiali/PySelenium)
+[![Travis CI Build Status](https://travis-ci.org/felipefiali/PySelenium.svg?branch=master)](https://travis-ci.org/felipefiali/PySelenium)
+[![Coverage Status](https://coveralls.io/repos/github/felipefiali/PySelenium/badge.svg)](https://coveralls.io/github/felipefiali/PySelenium)
+[![License](https://img.shields.io/github/license/felipefiali/pyselenium.svg)](./LICENSE)
+
+# PySelenium 
 A Python package that uses Selenium to enable for automating tests for web applications.
 
 ## Setup instructions
 
 * Get Google Chrome's driver from https://sites.google.com/a/chromium.org/chromedriver/downloads
 
-* Put the web driver executable in any folder and add that folder to $PATH
+* Put the web driver executable in any folder and add that folder to `$PATH`
 
 * Run `pip install pyselenium` 
 
@@ -82,4 +86,4 @@ Switches the context to the default content of the web page. Should always be ca
 
 ### SendEnter
 
-Sends an ENTER key to the webpage. It's the same as if the user simply hit the return button on the keyboard. This step doesn't have any context information as to there the focus is on the page, so should only be used when necessary.
+Sends an ENTER key to the webpage. It's the same as if the user simply hit the return button on the keyboard. This step does not have any context information as to there the focus is on the page, so should only be used when necessary.
