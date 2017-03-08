@@ -33,6 +33,18 @@ test_result = test_runner.run_test()
 print(test_result)
 ```
 
+### Getting the CSS path from elements
+
+Finding the CSS path from elements is failry easy with Google Chrome. All you need to do is right-click the element, and hit "Inspect" to bring up the developer tools console:
+
+[![Inspect](./images/Inspect.gif)](./images/Inspect.gif)
+
+With the developer tools console opened, right-click the element in it and choose "Copy Selector":
+
+[![Selector](./images/Selector.gif)](./images/Selector.gif)
+
+The CSS path of the selected element should already be in your clipboard after doing this.
+
 ## Sample test
 
 You can find a sample test in [pyselenium/sample_test.py](https://github.com/felipefiali/PySelenium/blob/master/pyselenium/sample_test.py)
