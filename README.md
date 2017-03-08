@@ -37,11 +37,11 @@ print(test_result)
 
 Finding the CSS path from elements is failry easy with Google Chrome. All you need to do is right-click the element, and hit "Inspect" to bring up the developer tools console:
 
-[![Inspect](https://github.com/felipefiali/PySelenium/blob/master/images/Inspect.gif)](https://github.com/felipefiali/PySelenium/blob/master/images/Inspect.gif)
+[![Inspect](https://github.com/felipefiali/PySelenium/blob/master/images/Inspect.gif?raw=true)](https://github.com/felipefiali/PySelenium/blob/master/images/Inspect.gif)
 
 With the developer tools console opened, right-click the element in it and choose "Copy Selector":
 
-[![Selector](https://github.com/felipefiali/PySelenium/blob/master/images/Selector.gif)](https://github.com/felipefiali/PySelenium/blob/master/images/Selector.gif)
+[![Selector](https://github.com/felipefiali/PySelenium/blob/master/images/Selector.gif?raw=true)](https://github.com/felipefiali/PySelenium/blob/master/images/Selector.gif)
 
 The CSS path of the selected element should already be in your clipboard after doing this.
 
