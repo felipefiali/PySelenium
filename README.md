@@ -37,11 +37,11 @@ print(test_result)
 
 Finding the CSS path from elements is failry easy with Google Chrome. All you need to do is right-click the element, and hit "Inspect" to bring up the developer tools console:
 
-[![Inspect](./images/Inspect.gif)](./images/Inspect.gif)
+[![Inspect](https://github.com/felipefiali/PySelenium/blob/master/images/Inspect.gif)](https://github.com/felipefiali/PySelenium/blob/master/images/Inspect.gif)
 
 With the developer tools console opened, right-click the element in it and choose "Copy Selector":
 
-[![Selector](./images/Selector.gif)](./images/Selector.gif)
+[![Selector](https://github.com/felipefiali/PySelenium/blob/master/images/Selector.gif)](https://github.com/felipefiali/PySelenium/blob/master/images/Selector.gif)
 
 The CSS path of the selected element should already be in your clipboard after doing this.
 
@@ -53,50 +53,38 @@ You can find a sample test in [pyselenium/sample_test.py](https://github.com/fel
 
 These are the test steps currently available to be used:
 
-### Navigate
+* **Navigate**
+    * Navigates to a specified URL.
+    
+* **Click**
+    * Clicks on a given element on the web page. It may be any HTML element. Fails if the element can not be found on the web page.
 
-Navigates to a specified URL.
+* **AssertElementValue**
+    * Asserts that the element value (text) is equal to the specified one. Fails if the found value is different from the expected one.
 
-### Click
+* **AssertElementAttributeValue**
+    * Asserts that the value of a specific attribute of the HTML element is equal to the specified one. Fails if the found value is different from the expected one.
 
-Clicks on a given element on the web page. It may be any HTML element. Fails if the element can not be found on the web page.
+* **ClickIfFound**
+    * Clicks on a given element on the web page. It may be any HTML element. Does not fail if the element can not be found on the web page. If the element is not found, does nothing.
 
-### AssertElementValue
+* **AssertElementNotPresent**
+    * Asserts that an element is not present on the web page. Fails if the element is found.
 
-Asserts that the element value (text) is equal to the specified one. Fails if the found value is different from the expected one.
+* **TypeText**
+    * Simulates the user typing text on a given element on the web page. Fails if the element is not found.
 
-### AssertElementAttributeValue
+* **SelectDropDownItemByText**
+    * Selects an option on a dropdown element by comparing its text to a given value. Fails if the element is not found.
 
-Asserts that the value of a specific attribute of the HTML element is equal to the specified one. Fails if the found value is different from the expected one.
+* **SetCheckbox**
+    * Sets a checkbox to true or false. Fails if the checkbox is not found.
 
-### ClickIfFound
+* **SwitchFrame**
+    * Switches the context to a given iFrame on the page. Fails if the iFrame is not found. After running this step, one should call the `SwitchToDefaultContent` right after running the needed steps on the selected iFrame to ensure that the context is switched back to the default content of the page.
 
-Clicks on a given element on the web page. It may be any HTML element. Does not fail if the element can not be found on the web page. If the element is not found, does nothing.
+* **SwitchToDefaultContent**
+    * Switches the context to the default content of the web page. Should always be called after switching the context to another iFrame and running the needed steps on that iFrame.
 
-### AssertElementNotPresent
-
-Asserts that an element is not present on the web page. Fails if the element is found.
-
-### TypeText
-
-Simulates the user typing text on a given element on the web page. Fails if the element is not found.
-
-### SelectDropDownItemByText
-
-Selects an option on a dropdown element by comparing its text to a given value. Fails if the element is not found.
-
-### SetCheckbox
-
-Sets a checkbox to true or false. Fails if the checkbox is not found.
-
-### SwitchFrame
-
-Switches the context to a given iFrame on the page. Fails if the iFrame is not found. After running this step, one should call the `SwitchToDefaultContent` right after running the needed steps on the selected iFrame to ensure that the context is switched back to the default content of the page.
-
-### SwitchToDefaultContent
-
-Switches the context to the default content of the web page. Should always be called after switching the context to another iFrame and running the needed steps on that iFrame.
-
-### SendEnter
-
-Sends an ENTER key to the webpage. It's the same as if the user simply hit the return button on the keyboard. This step does not have any context information as to there the focus is on the page, so should only be used when necessary.
+* **SendEnter**
+    * Sends an ENTER key to the webpage. It's the same as if the user simply hit the return button on the keyboard. This step does not have any context information as to there the focus is on the page, so should only be used when necessary.
