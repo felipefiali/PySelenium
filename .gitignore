@@ -95,3 +95,6 @@ ENV/
 .idea/workspace.xml
 .idea/tasks.xml
 *.idea/
+
+# VS Code environment configuration
+.vscode/
