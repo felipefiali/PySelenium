@@ -35,7 +35,7 @@ print(test_result)
 
 ### Getting the CSS path from elements
 
-Finding the CSS path from elements is failry easy with Google Chrome. All you need to do is right-click the element, and hit "Inspect" to bring up the developer tools console:
+Finding the CSS path from elements is fairly easy with Google Chrome. All you need to do is right-click the element and hit "Inspect" to bring up the developer tools console:
 
 [![Inspect](https://github.com/felipefiali/PySelenium/blob/master/images/Inspect.gif?raw=true)](https://github.com/felipefiali/PySelenium/blob/master/images/Inspect.gif)
 
