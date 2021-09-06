@@ -203,6 +203,136 @@ class SetCheckbox(ElementFinder, Step):
 
         return step_result
 
+class AcceptAlert(Step):
+    """ Accepts an alert"""
+
+    def run(self, driver):
+        step_result = StepResult(self)
+
+        try:
+            driver.accept_alert()
+        except Exception as exception:
+            step_result.exception = exception
+
+        return step_result
+
+class DismissAlert(Step):
+    """ Dismisses an alert (technically a confirm box)"""
+
+    def run(self, driver):
+        step_result = StepResult(self)
+
+        try:
+            driver.dismiss_alert()
+        except Exception as exception:
+            step_result.exception = exception
+
+        return step_result
+
+class GetAlertText(Step):
+    """ Gets an alert text"""
+
+    def run(self, driver):
+        step_result = StepResult(self)
+
+        try:
+            driver.get_alert_text()
+        except Exception as exception:
+            step_result.exception = exception
+
+        return step_result
+
+class AlertSendText(Step):
+    """ Sends text to an alert (technically a prompt)"""
+
+    def __init__(self, text):
+        super().__init__()
+
+        self.alert_text = text
+
+    def run(self, driver):
+        step_result = StepResult(self)
+
+        try:
+            driver.alert_send_text(self.alert_text)
+        except Exception as exception:
+            step_result.exception = exception
+
+        return step_result
+
+class AcceptAlertIfFound(Step):
+    """A test step that accepts an alert if it is found but doesn't fail if it's not found"""
+
+    def __init__(self, wait_time):
+        super().__init__()
+
+        self.wait_time = wait_time
+
+    def run(self, driver):
+        step_result = StepResult(self)
+
+        try:
+            driver.accept_alert_if_found(self.wait_time)
+        except Exception as exception:
+            step_result.exception = exception
+
+        return step_result
+
+class DismissAlertIfFound(Step):
+    """A test step that dismisses an alert if it is found but doesn't fail if it's not found"""
+
+    def __init__(self, wait_time):
+        super().__init__()
+
+        self.wait_time = wait_time
+
+    def run(self, driver):
+        step_result = StepResult(self)
+
+        try:
+            driver.dismiss_alert_if_found(self.wait_time)
+        except Exception as exception:
+            step_result.exception = exception
+
+        return step_result
+
+class GetAlertTextIfFound(Step):
+    """A test step that gets an alert text if it is found but doesn't fail if it's not found"""
+
+    def __init__(self, wait_time):
+        super().__init__()
+
+        self.wait_time = wait_time
+
+    def run(self, driver):
+        step_result = StepResult(self)
+
+        try:
+            driver.get_alert_text_if_found(self.wait_time)
+        except Exception as exception:
+            step_result.exception = exception
+
+        return step_result
+
+class AlertSendTextIfFound(Step):
+    """A test step that sends text to an alert (technically a prompt) if it is
+    found but doesn't fail if it's not found"""
+
+    def __init__(self, text, wait_time):
+        super().__init__()
+
+        self.alert_text = text
+        self.wait_time = wait_time
+
+    def run(self, driver):
+        step_result = StepResult(self)
+
+        try:
+            driver.alert_send_text_if_found(self.alert_text, self.wait_time)
+        except Exception as exception:
+            step_result.exception = exception
+
+        return step_result
 
 class SwitchFrame(ElementFinder, Step):
     """"Switches the context of the web driver to the iFrame found at the specified CSS path"""

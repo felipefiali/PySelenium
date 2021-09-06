@@ -43,6 +43,17 @@ class NoSuchAttributeError(Exception):
         self.inner_exception = exception
 
 
+class NoAlertPresentError(Exception):
+    """Exception raised when the alert is not present.
+
+    Attributes:
+        inner_exception -- The exception that may have been thrown by the web driver, None otherwise
+    """
+
+    def __init__(self, exception):
+        self.inner_exception = exception
+
+
 class CannotTypeTextError(Exception):
     """Exception raised when the web element is found but the typing of the text fails for some reason.
 
@@ -283,6 +294,83 @@ class Driver:
         if element.is_selected() != checked:
             element.click()
 
+    # Alerts, prompts and confirm boxes
+    def accept_alert(self):
+        """ Accepts an alert"""
+
+        self.driver.switch_to.alert.accept()
+
+    def dismiss_alert(self):
+        """ Dismisses an alert (technically a confirm box)"""
+
+        self.driver.switch_to.alert.dismiss()
+
+    def get_alert_text(self):
+        """ Gets an alert text"""
+
+        return self.driver.switch_to.alert.text
+
+    def alert_send_text(self, text):
+        """ Sends text to an alert (technically a prompt)"""
+
+        self.driver.switch_to.alert.send_keys(text)
+
+    def accept_alert_if_found(self, wait_time):
+        """ Tries to accept an alert on the web page for the time specified as the wait time.
+        Does nothing if the alert is not found."""
+
+        if wait_time is None or wait_time < 0:
+            raise ValueError('wait_time')
+
+        try:
+            alert = self._find_alert_with_timeout(wait_time)
+        except NoAlertPresentException:
+            pass
+        else:
+            self.driver.switch_to.alert.accept()
+
+    def dismiss_alert_if_found(self, wait_time):
+        """ Tries to dismiss an alert (technically a confirm box) for the time specified as the wait time.
+        Does nothing if the alert is not found."""
+
+        if wait_time is None or wait_time < 0:
+            raise ValueError('wait_time')
+
+        try:
+            alert = self._find_alert_with_timeout(wait_time)
+        except NoAlertPresentException:
+            pass
+        else:
+            self.driver.switch_to.alert.dismiss()
+
+    def get_alert_text_if_found(self, wait_time):
+        """ Tries to get an alert text for the time specified as the wait time.
+        Does nothing if the alert is not found."""
+
+        if wait_time is None or wait_time < 0:
+            raise ValueError('wait_time')
+
+        try:
+            alert = self._find_alert_with_timeout(wait_time)
+        except NoAlertPresentException:
+            pass
+        else:
+            return self.driver.switch_to.alert.text
+
+    def alert_send_text_if_found(self, text, wait_time):
+        """ Tries to send text to an alert (technically a prompt) for the time specified as the wait time.
+        Does nothing if the alert is not found."""
+
+        if wait_time is None or wait_time < 0:
+            raise ValueError('wait_time')
+
+        try:
+            alert = self._find_alert_with_timeout(wait_time)
+        except NoAlertPresentException:
+            pass
+        else:
+            self.driver.switch_to.alert.send_keys(text)
+
     def switch_to_frame(self, css_path, hint):
         """Switches the context of the web driver to the frame at the specified CSS path.
         Raises errors if the frame can not be found."""
@@ -312,11 +400,24 @@ class Driver:
         else:
             return element
 
+    def _find_alert_with_timeout(self, timeout):
+        try:
+            alert = self._get_web_driver_wait(self.driver, timeout).until(
+                self._get_presence_of_alert()
+            )
+        except (NoAlertPresentException, TimeoutException) as exception:
+            raise NoAlertPresentError(exception)
+        else:
+            return alert
+
     def _get_web_driver(self):
         return webdriver.Chrome()
 
     def _get_web_driver_wait(self, driver, timeout):
         return WebDriverWait(driver, timeout)
+
+    def _get_presence_of_alert(self):
+        return expected_conditions.alert_is_present()
 
     def _get_presence_of_element_located(self, css_path):
         return expected_conditions.presence_of_element_located((By.CSS_SELECTOR, css_path))
